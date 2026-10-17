@@ -1,0 +1,19 @@
+{
+  "size": "10x10",
+  "runs": 25,
+  "baseline": {
+    "eval": 86.510566,
+    "define": 13.035629,
+    "handler": 13.365724999999998,
+    "first": 7.519502000000003,
+    "total": 121.733004
+  },
+  "withoutFormData": {
+    "eval": 55.997966,
+    "define": 15.875692,
+    "handler": 14.394411000000005,
+    "first": 34.614746999999994,
+    "total": 122.173998
+  },
+  "emptyProcessFormDataTouchMs": 32.145779000000005
+}

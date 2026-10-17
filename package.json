@@ -1,0 +1,16 @@
+{
+  "name": "benchmark-http-api-boot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "bench": "node scripts/bench.mjs",
+    "profile": "node scripts/profile.mjs"
+  },
+  "dependencies": {
+    "effect": "4.0.5"
+  },
+  "devDependencies": {
+    "rolldown": "^1.2.14"
+  }
+}

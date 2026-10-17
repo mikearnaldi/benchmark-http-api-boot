@@ -1,0 +1,3788 @@
+{
+  "generatedAt": "2026-10-17T08:50:49.964Z",
+  "env": {
+    "node": "v24.21.0",
+    "platform": "linux 6.18.54",
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "cores": 8,
+    "effect": "npm 4.0.5",
+    "rolldown": "1.2.14",
+    "runs": 30,
+    "profileRuns": 5,
+    "profileIntervalUs": 100
+  },
+  "sizes": [
+    {
+      "size": "1x1",
+      "groups": 1,
+      "endpoints": 1,
+      "total": 1
+    },
+    {
+      "size": "1x10",
+      "groups": 1,
+      "endpoints": 10,
+      "total": 10
+    },
+    {
+      "size": "5x10",
+      "groups": 5,
+      "endpoints": 10,
+      "total": 50
+    },
+    {
+      "size": "10x10",
+      "groups": 10,
+      "endpoints": 10,
+      "total": 100
+    },
+    {
+      "size": "50x10",
+      "groups": 50,
+      "endpoints": 10,
+      "total": 500
+    }
+  ],
+  "timings": {
+    "node": "v24.21.0",
+    "effect": "npm",
+    "runs": 30,
+    "nodeBaseline": 26.505203,
+    "results": [
+      {
+        "size": "1x1",
+        "endpoints": 1,
+        "bundleKB": 551.6025390625,
+        "stats": {
+          "eval": {
+            "median": 85.753926,
+            "p95": 89.28634045,
+            "min": 81.219336
+          },
+          "define": {
+            "median": 2.3981185000000025,
+            "p95": 2.461417449999994,
+            "min": 2.3580690000000004
+          },
+          "layer": {
+            "median": 0.1735970000000009,
+            "p95": 0.18832800000001057,
+            "min": 0.162698000000006
+          },
+          "handler": {
+            "median": 5.389229500000006,
+            "p95": 5.493448,
+            "min": 5.32562999999999
+          },
+          "first": {
+            "median": 7.5313514999999995,
+            "p95": 7.682169000000001,
+            "min": 7.440301999999988
+          },
+          "second": {
+            "median": 0.6591914999999986,
+            "p95": 0.6894159999999993,
+            "min": 0.6381919999999894
+          },
+          "openapi": {
+            "median": 6.120820000000002,
+            "p95": 6.175528999999999,
+            "min": 6.032420999999999
+          },
+          "total": {
+            "median": 108.26348200000001,
+            "p95": 111.61145335,
+            "min": 103.413945
+          },
+          "cpuAfterEval": {
+            "median": 23.492,
+            "p95": 23.784,
+            "min": 23.214
+          },
+          "cpuTotal": {
+            "median": 122.6095,
+            "p95": 125.59905,
+            "min": 118.469
+          },
+          "heapUsedMB": {
+            "median": 10.390518188476562,
+            "p95": 10.41900634765625,
+            "min": 10.354804992675781
+          }
+        }
+      },
+      {
+        "size": "1x10",
+        "endpoints": 10,
+        "bundleKB": 554.1455078125,
+        "stats": {
+          "eval": {
+            "median": 85.59772849999999,
+            "p95": 87.4840288,
+            "min": 82.385721
+          },
+          "define": {
+            "median": 3.7906499999999994,
+            "p95": 3.8585944499999982,
+            "min": 3.7449510000000004
+          },
+          "layer": {
+            "median": 0.20429750000000269,
+            "p95": 0.21896699999999783,
+            "min": 0.19909800000000644
+          },
+          "handler": {
+            "median": 7.553651000000002,
+            "p95": 7.694403999999996,
+            "min": 7.473001999999994
+          },
+          "first": {
+            "median": 7.448952499999997,
+            "p95": 7.637660449999995,
+            "min": 7.374104000000003
+          },
+          "second": {
+            "median": 0.6400920000000028,
+            "p95": 0.6609410000000068,
+            "min": 0.6251919999999984
+          },
+          "openapi": {
+            "median": 10.079568000000002,
+            "p95": 13.330815450000003,
+            "min": 9.972469000000004
+          },
+          "total": {
+            "median": 115.55703650000001,
+            "p95": 120.5480808,
+            "min": 112.141931
+          },
+          "cpuAfterEval": {
+            "median": 34.599000000000004,
+            "p95": 35.713,
+            "min": 34.048
+          },
+          "cpuTotal": {
+            "median": 133.2825,
+            "p95": 136.5741,
+            "min": 130.611
+          },
+          "heapUsedMB": {
+            "median": 11.018383026123047,
+            "p95": 11.300915145874022,
+            "min": 10.982475280761719
+          }
+        }
+      },
+      {
+        "size": "5x10",
+        "endpoints": 50,
+        "bundleKB": 568.4853515625,
+        "stats": {
+          "eval": {
+            "median": 85.706027,
+            "p95": 90.0399657,
+            "min": 81.461933
+          },
+          "define": {
+            "median": 8.340090500000002,
+            "p95": 11.489998900000005,
+            "min": 7.009308000000004
+          },
+          "layer": {
+            "median": 0.3605955000000023,
+            "p95": 1.5711489999999955,
+            "min": 0.3229959999999892
+          },
+          "handler": {
+            "median": 11.380800500000007,
+            "p95": 11.880769449999994,
+            "min": 10.074668000000003
+          },
+          "first": {
+            "median": 7.404202999999995,
+            "p95": 7.586335450000003,
+            "min": 7.310704999999999
+          },
+          "second": {
+            "median": 0.604141999999996,
+            "p95": 0.6341864499999914,
+            "min": 0.5796929999999918
+          },
+          "openapi": {
+            "median": 17.2242245,
+            "p95": 17.45960145,
+            "min": 16.904679
+          },
+          "total": {
+            "median": 130.7867365,
+            "p95": 137.79473035,
+            "min": 125.18196
+          },
+          "cpuAfterEval": {
+            "median": 59.8715,
+            "p95": 61.2374,
+            "min": 59.067
+          },
+          "cpuTotal": {
+            "median": 158.405,
+            "p95": 164.292,
+            "min": 155.34
+          },
+          "heapUsedMB": {
+            "median": 14.01559829711914,
+            "p95": 14.05229606628418,
+            "min": 13.961753845214844
+          }
+        }
+      },
+      {
+        "size": "10x10",
+        "endpoints": 100,
+        "bundleKB": 586.4130859375,
+        "stats": {
+          "eval": {
+            "median": 86.3338185,
+            "p95": 90.68071175,
+            "min": 83.643204
+          },
+          "define": {
+            "median": 12.996879999999997,
+            "p95": 14.652918450000003,
+            "min": 11.094154000000003
+          },
+          "layer": {
+            "median": 0.43554399999999305,
+            "p95": 0.459454000000003,
+            "min": 0.41659400000000346
+          },
+          "handler": {
+            "median": 13.398174499999996,
+            "p95": 14.010706499999998,
+            "min": 13.204026999999996
+          },
+          "first": {
+            "median": 7.533251,
+            "p95": 7.761588450000001,
+            "min": 7.414303000000004
+          },
+          "second": {
+            "median": 0.6156920000000028,
+            "p95": 0.6537270000000084,
+            "min": 0.5929920000000095
+          },
+          "openapi": {
+            "median": 25.299318999999997,
+            "p95": 28.3135939,
+            "min": 24.664076999999992
+          },
+          "total": {
+            "median": 146.844976,
+            "p95": 152.64371,
+            "min": 141.21595
+          },
+          "cpuAfterEval": {
+            "median": 89.788,
+            "p95": 97.2567,
+            "min": 87.922
+          },
+          "cpuTotal": {
+            "median": 189.525,
+            "p95": 197.82444999999998,
+            "min": 186.508
+          },
+          "heapUsedMB": {
+            "median": 16.29784393310547,
+            "p95": 16.374071502685545,
+            "min": 16.22248077392578
+          }
+        }
+      },
+      {
+        "size": "50x10",
+        "endpoints": 500,
+        "bundleKB": 730.3974609375,
+        "stats": {
+          "eval": {
+            "median": 87.392455,
+            "p95": 91.88009615,
+            "min": 85.247983
+          },
+          "define": {
+            "median": 38.91659000000001,
+            "p95": 40.48222989999999,
+            "min": 35.730132
+          },
+          "layer": {
+            "median": 1.2869334999999964,
+            "p95": 1.3879969999999922,
+            "min": 1.2265840000000026
+          },
+          "handler": {
+            "median": 43.963224,
+            "p95": 46.22592900000001,
+            "min": 43.109635
+          },
+          "first": {
+            "median": 7.744098499999993,
+            "p95": 7.965100999999994,
+            "min": 7.569700000000012
+          },
+          "second": {
+            "median": 0.6335419999999914,
+            "p95": 0.6621014499999844,
+            "min": 0.6085919999999874
+          },
+          "openapi": {
+            "median": 86.6325645,
+            "p95": 91.14090125000001,
+            "min": 83.04481199999998
+          },
+          "total": {
+            "median": 266.2938115,
+            "p95": 276.77848385,
+            "min": 259.766696
+          },
+          "cpuAfterEval": {
+            "median": 361.108,
+            "p95": 376.51959999999997,
+            "min": 354.966
+          },
+          "cpuTotal": {
+            "median": 462.629,
+            "p95": 478.84085,
+            "min": 456.559
+          },
+          "heapUsedMB": {
+            "median": 26.88180923461914,
+            "p95": 27.193911361694337,
+            "min": 26.207748413085938
+          }
+        }
+      }
+    ]
+  },
+  "timingsMin": {
+    "node": "v24.21.0",
+    "effect": "npm",
+    "runs": 30,
+    "nodeBaseline": 26.3751545,
+    "results": [
+      {
+        "size": "1x1",
+        "endpoints": 1,
+        "bundleKB": 219.435546875,
+        "stats": {
+          "eval": {
+            "median": 73.564686,
+            "p95": 75.9976039,
+            "min": 68.562801
+          },
+          "define": {
+            "median": 3.0509600000000034,
+            "p95": 3.110659000000003,
+            "min": 3.0067609999999974
+          },
+          "layer": {
+            "median": 0.16484800000000632,
+            "p95": 0.1835030000000053,
+            "min": 0.16049800000000403
+          },
+          "handler": {
+            "median": 5.078033000000005,
+            "p95": 5.170247000000002,
+            "min": 4.972735
+          },
+          "first": {
+            "median": 7.653999999999996,
+            "p95": 7.802833000000002,
+            "min": 7.5338020000000085
+          },
+          "second": {
+            "median": 0.659541499999996,
+            "p95": 0.687471000000005,
+            "min": 0.629491999999999
+          },
+          "openapi": {
+            "median": 5.751724500000009,
+            "p95": 5.864923000000004,
+            "min": 5.667025999999993
+          },
+          "total": {
+            "median": 95.8895435,
+            "p95": 98.324591,
+            "min": 90.649612
+          },
+          "cpuAfterEval": {
+            "median": 23.7445,
+            "p95": 24.1151,
+            "min": 23.318
+          },
+          "cpuTotal": {
+            "median": 109.1075,
+            "p95": 112.38835,
+            "min": 104.43
+          },
+          "heapUsedMB": {
+            "median": 9.974613189697266,
+            "p95": 9.990424728393554,
+            "min": 9.963569641113281
+          }
+        }
+      },
+      {
+        "size": "1x10",
+        "endpoints": 10,
+        "bundleKB": 220.7841796875,
+        "stats": {
+          "eval": {
+            "median": 72.9613445,
+            "p95": 75.48382104999999,
+            "min": 68.995396
+          },
+          "define": {
+            "median": 4.420791999999999,
+            "p95": 4.5319404500000084,
+            "min": 4.371142000000006
+          },
+          "layer": {
+            "median": 0.19054799999999972,
+            "p95": 0.20771200000000148,
+            "min": 0.18229700000000548
+          },
+          "handler": {
+            "median": 7.169505999999998,
+            "p95": 7.279595000000005,
+            "min": 7.071207000000001
+          },
+          "first": {
+            "median": 7.5327509999999975,
+            "p95": 7.663629449999997,
+            "min": 7.493302
+          },
+          "second": {
+            "median": 0.6432920000000024,
+            "p95": 0.6625815500000016,
+            "min": 0.6243920000000003
+          },
+          "openapi": {
+            "median": 9.544424999999997,
+            "p95": 11.31149664999999,
+            "min": 9.454875999999999
+          },
+          "total": {
+            "median": 102.822803,
+            "p95": 105.10467829999999,
+            "min": 98.998803
+          },
+          "cpuAfterEval": {
+            "median": 34.4895,
+            "p95": 35.233599999999996,
+            "min": 33.835
+          },
+          "cpuTotal": {
+            "median": 119.244,
+            "p95": 121.18505,
+            "min": 116.61
+          },
+          "heapUsedMB": {
+            "median": 10.348831176757812,
+            "p95": 10.39499397277832,
+            "min": 10.318489074707031
+          }
+        }
+      },
+      {
+        "size": "5x10",
+        "endpoints": 50,
+        "bundleKB": 228.248046875,
+        "stats": {
+          "eval": {
+            "median": 73.44108750000001,
+            "p95": 76.3988238,
+            "min": 69.357891
+          },
+          "define": {
+            "median": 11.612448000000008,
+            "p95": 11.91212345,
+            "min": 8.419788999999994
+          },
+          "layer": {
+            "median": 0.4155944999999974,
+            "p95": 0.4473294500000044,
+            "min": 0.37999499999999387
+          },
+          "handler": {
+            "median": 11.701397,
+            "p95": 12.083646450000007,
+            "min": 11.546148000000002
+          },
+          "first": {
+            "median": 7.514451999999999,
+            "p95": 7.707658450000006,
+            "min": 7.4277019999999965
+          },
+          "second": {
+            "median": 0.6090919999999969,
+            "p95": 0.6374119999999962,
+            "min": 0.5797929999999951
+          },
+          "openapi": {
+            "median": 16.142838000000005,
+            "p95": 16.412485,
+            "min": 15.824592999999993
+          },
+          "total": {
+            "median": 120.504321,
+            "p95": 123.00505815,
+            "min": 114.106005
+          },
+          "cpuAfterEval": {
+            "median": 62.09,
+            "p95": 63.46495,
+            "min": 60.825
+          },
+          "cpuTotal": {
+            "median": 147.95350000000002,
+            "p95": 151.2824,
+            "min": 144.09
+          },
+          "heapUsedMB": {
+            "median": 12.24393081665039,
+            "p95": 12.267352294921874,
+            "min": 12.187080383300781
+          }
+        }
+      },
+      {
+        "size": "10x10",
+        "endpoints": 100,
+        "bundleKB": 237.484375,
+        "stats": {
+          "eval": {
+            "median": 73.673585,
+            "p95": 77.22546344999999,
+            "min": 70.16518
+          },
+          "define": {
+            "median": 15.026553,
+            "p95": 15.246984999999997,
+            "min": 11.793145999999993
+          },
+          "layer": {
+            "median": 0.4745434999999958,
+            "p95": 0.5041589999999971,
+            "min": 0.45509400000000255
+          },
+          "handler": {
+            "median": 13.830169000000005,
+            "p95": 14.115395000000003,
+            "min": 13.494123000000002
+          },
+          "first": {
+            "median": 7.637599999999999,
+            "p95": 7.907691000000001,
+            "min": 7.525600999999995
+          },
+          "second": {
+            "median": 0.6307919999999996,
+            "p95": 0.6591609999999968,
+            "min": 0.5994919999999979
+          },
+          "openapi": {
+            "median": 25.187819999999995,
+            "p95": 26.054748700000005,
+            "min": 24.586277999999993
+          },
+          "total": {
+            "median": 136.1781155,
+            "p95": 139.59096069999998,
+            "min": 130.52439
+          },
+          "cpuAfterEval": {
+            "median": 91.03399999999999,
+            "p95": 92.4188,
+            "min": 89.26
+          },
+          "cpuTotal": {
+            "median": 177.5345,
+            "p95": 182.40335,
+            "min": 173.909
+          },
+          "heapUsedMB": {
+            "median": 14.224987030029297,
+            "p95": 14.263736343383789,
+            "min": 14.173202514648438
+          }
+        }
+      },
+      {
+        "size": "50x10",
+        "endpoints": 500,
+        "bundleKB": 311.5986328125,
+        "stats": {
+          "eval": {
+            "median": 74.9795175,
+            "p95": 79.4297941,
+            "min": 71.628261
+          },
+          "define": {
+            "median": 38.046701500000005,
+            "p95": 40.7875359,
+            "min": 36.65002
+          },
+          "layer": {
+            "median": 1.253733000000004,
+            "p95": 1.3313074499999942,
+            "min": 1.22998299999999
+          },
+          "handler": {
+            "median": 42.349095000000005,
+            "p95": 43.161734900000006,
+            "min": 40.94726300000001
+          },
+          "first": {
+            "median": 7.8243480000000005,
+            "p95": 7.950410899999985,
+            "min": 7.665700000000015
+          },
+          "second": {
+            "median": 0.6451409999999953,
+            "p95": 0.6869364499999904,
+            "min": 0.6234919999999988
+          },
+          "openapi": {
+            "median": 81.68092949999999,
+            "p95": 86.5683662,
+            "min": 78.475372
+          },
+          "total": {
+            "median": 248.91253799999998,
+            "p95": 253.21214195,
+            "min": 239.375964
+          },
+          "cpuAfterEval": {
+            "median": 350.8905,
+            "p95": 366.27395,
+            "min": 337.277
+          },
+          "cpuTotal": {
+            "median": 437.9715,
+            "p95": 456.93784999999997,
+            "min": 423.685
+          },
+          "heapUsedMB": {
+            "median": 28.829784393310547,
+            "p95": 29.44774589538574,
+            "min": 28.68817901611328
+          }
+        }
+      }
+    ]
+  },
+  "profiles": [
+    {
+      "size": "1x1",
+      "categoriesMs": {
+        "bootstrap": {
+          "Node bootstrap": 3.5933999999999995
+        },
+        "eval": {
+          "Parse & compile bundle": 21.99880000000013,
+          "Node built-ins": 1.8264000000000005,
+          "Module top-level (unmapped)": 5.266799999999998,
+          "Effect runtime & Layer": 1.2978,
+          "pipe / dual / predicates": 0.28959999999999997,
+          "Schema": 4.679,
+          "Node: undici init": 36.03940000000011,
+          "V8 (program)": 0.1942,
+          "Garbage collector": 3.2352000000000003,
+          "Other": 1.2112,
+          "HttpApi definition": 0.09680000000000001
+        },
+        "define": {
+          "HttpApi definition": 1.0372000000000001,
+          "Schema": 1.2704000000000004,
+          "pipe / dual / predicates": 0.1612,
+          "Module top-level (unmapped)": 0.16219999999999998,
+          "Other": 0.32559999999999995
+        },
+        "layer": {
+          "Other": 0.129,
+          "Module top-level (unmapped)": 0.032,
+          "pipe / dual / predicates": 0.032600000000000004
+        },
+        "handler": {
+          "pipe / dual / predicates": 0.284,
+          "Effect runtime & Layer": 3.5338,
+          "Other": 0.9372000000000001,
+          "HttpApiBuilder": 0.8598000000000001,
+          "Schema": 0.48560000000000003,
+          "Router (FindMyWay)": 0.7
+        },
+        "first": {
+          "Module top-level (unmapped)": 0.5073999999999999,
+          "Node: undici init": 4.165399999999999,
+          "Other": 1.4388000000000003,
+          "Effect runtime & Layer": 0.7616000000000002,
+          "Router (FindMyWay)": 0.162,
+          "Schema": 2.121400000000001,
+          "HttpApiBuilder": 0.1614,
+          "pipe / dual / predicates": 0.025
+        },
+        "second": {
+          "Node: undici init": 0.3876,
+          "Effect runtime & Layer": 0.026199999999999998,
+          "Schema": 0.16240000000000002,
+          "Other": 0.16219999999999998,
+          "pipe / dual / predicates": 0.032799999999999996
+        },
+        "openapi": {
+          "Other": 1.4124000000000003,
+          "HttpApi definition": 2.4794000000000005,
+          "Schema": 3.3654000000000006,
+          "Effect runtime & Layer": 0.06420000000000001,
+          "Module top-level (unmapped)": 0.0324,
+          "Garbage collector": 0.0352,
+          "pipe / dual / predicates": 0.032600000000000004,
+          "Node built-ins": 0.0324
+        }
+      },
+      "topFunctions": {
+        "bootstrap": [
+          {
+            "name": "decode node:internal/encoding",
+            "ms": 0.31800000000000006
+          },
+          {
+            "name": "(program) ((program))",
+            "ms": 0.298
+          },
+          {
+            "name": "getCLIOptionsFromBinding node:internal/options",
+            "ms": 0.2622
+          },
+          {
+            "name": "normalizeString node:path",
+            "ms": 0.2306
+          },
+          {
+            "name": "resolve node:path",
+            "ms": 0.20860000000000004
+          },
+          {
+            "name": "evaluate (evaluate)",
+            "ms": 0.194
+          },
+          {
+            "name": "patchProcessObject process/pre_execution",
+            "ms": 0.15239999999999998
+          },
+          {
+            "name": "createUnsafeBuffer node:internal/buffer",
+            "ms": 0.14639999999999997
+          },
+          {
+            "name": "getOptionValue node:internal/options",
+            "ms": 0.1272
+          },
+          {
+            "name": "readFileSync node:fs",
+            "ms": 0.1154
+          },
+          {
+            "name": "lstat (lstat)",
+            "ms": 0.1004
+          },
+          {
+            "name": "initializeDeprecations process/pre_execution",
+            "ms": 0.098
+          },
+          {
+            "name": "getCLIOptionsValues (getCLIOptionsValues)",
+            "ms": 0.0972
+          },
+          {
+            "name": "debug util/debuglog",
+            "ms": 0.0958
+          },
+          {
+            "name": "(anonymous) main/run_main_module",
+            "ms": 0.0958
+          }
+        ],
+        "eval": [
+          {
+            "name": "compileSourceTextModule esm/utils",
+            "ms": 21.99880000000013
+          },
+          {
+            "name": "compileForInternalLoader bootstrap/realm",
+            "ms": 11.730799999999993
+          },
+          {
+            "name": "__require undici/undici",
+            "ms": 8.328199999999988
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 5.266799999999998
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 3.2352000000000003
+          },
+          {
+            "name": "internalBinding bootstrap/realm",
+            "ms": 1.4930000000000005
+          },
+          {
+            "name": "(anonymous) crypto/util",
+            "ms": 1.2431999999999999
+          },
+          {
+            "name": "(anonymous) node:zlib",
+            "ms": 0.8324
+          },
+          {
+            "name": "lib/llhttp/constants.js undici/undici",
+            "ms": 0.6092
+          },
+          {
+            "name": "(anonymous) crypto/keys",
+            "ms": 0.5154
+          },
+          {
+            "name": "lib/core/tree.js undici/undici",
+            "ms": 0.4238
+          },
+          {
+            "name": "createWritableStdioStream switches/is_main_thread",
+            "ms": 0.42039999999999994
+          },
+          {
+            "name": "createSupportedAlgorithms crypto/util",
+            "ms": 0.38880000000000003
+          },
+          {
+            "name": "lib/web/webidl/index.js undici/undici",
+            "ms": 0.3506
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.3236
+          }
+        ],
+        "define": [
+          {
+            "name": "defineApi generated/api-1x1.mjs:7",
+            "ms": 0.32559999999999995
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiEndpoint.ts:1048",
+            "ms": 0.323
+          },
+          {
+            "name": "validateSuccessResponse http-api/HttpApiEndpoint.ts:1257",
+            "ms": 0.2928
+          },
+          {
+            "name": "out src/SchemaAST.ts:4444",
+            "ms": 0.164
+          },
+          {
+            "name": "getSuccessResponse http-api/HttpApiEndpoint.ts:1219",
+            "ms": 0.16240000000000002
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.16219999999999998
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:4792",
+            "ms": 0.16119999999999998
+          },
+          {
+            "name": "(anonymous) schema/toCodec.ts:15",
+            "ms": 0.12960000000000002
+          },
+          {
+            "name": "toCodecJsonASTStep schema/toCodec.ts:59",
+            "ms": 0.1
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1577",
+            "ms": 0.0974
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiEndpoint.ts:1230",
+            "ms": 0.0974
+          },
+          {
+            "name": "validateCanonicalObjectPropertyNames schema/toCodec.ts:28",
+            "ms": 0.06559999999999999
+          },
+          {
+            "name": "applyToSelfOrLastLinkEncodingIdempotent.stopAt schema/toCodec.ts:258",
+            "ms": 0.065
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:4704",
+            "ms": 0.06480000000000001
+          },
+          {
+            "name": "make$1 http-api/HttpApi.ts:235",
+            "ms": 0.064
+          }
+        ],
+        "layer": [
+          {
+            "name": "defineLayer generated/api-1x1.mjs:35",
+            "ms": 0.129
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.032
+          }
+        ],
+        "handler": [
+          {
+            "name": "(anonymous) internal/effect.ts:1241",
+            "ms": 0.37739999999999996
+          },
+          {
+            "name": "on internal/router.ts:72",
+            "ms": 0.3454
+          },
+          {
+            "name": "handlerToHttpEffect http-api/HttpApiBuilder.ts:827",
+            "ms": 0.2832
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:443",
+            "ms": 0.22560000000000002
+          },
+          {
+            "name": "runLoop internal/effect.ts:625",
+            "ms": 0.19479999999999997
+          },
+          {
+            "name": "handlerToRoute http-api/HttpApiBuilder.ts:921",
+            "ms": 0.1876
+          },
+          {
+            "name": "makePrimitive internal/effect.ts:980",
+            "ms": 0.1638
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:143",
+            "ms": 0.16200000000000003
+          },
+          {
+            "name": "evaluate internal/effect.ts:583",
+            "ms": 0.162
+          },
+          {
+            "name": "(anonymous) internal/effect.ts:2274",
+            "ms": 0.16140000000000002
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:337",
+            "ms": 0.1612
+          },
+          {
+            "name": "andThenCont internal/effect.ts:1529",
+            "ms": 0.1298
+          },
+          {
+            "name": "(anonymous) src/Function.ts:238",
+            "ms": 0.1288
+          },
+          {
+            "name": "getDefaultValue src/Context.ts:1657",
+            "ms": 0.12840000000000001
+          },
+          {
+            "name": "(anonymous) src/Layer.ts:1638",
+            "ms": 0.1004
+          }
+        ],
+        "first": [
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.6068
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.5073999999999999
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.44419999999999993
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.3564
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3757",
+            "ms": 0.31539999999999996
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:212",
+            "ms": 0.29020000000000007
+          },
+          {
+            "name": "compile schema/interpreter.ts:120",
+            "ms": 0.25739999999999996
+          },
+          {
+            "name": "enqueue webstreams/readablestream",
+            "ms": 0.194
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3120",
+            "ms": 0.19379999999999997
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:347",
+            "ms": 0.18580000000000002
+          },
+          {
+            "name": "getCandidateIndex src/SchemaAST.ts:3500",
+            "ms": 0.16279999999999997
+          },
+          {
+            "name": "webidl.converters.unsigned short undici/undici",
+            "ms": 0.16160000000000002
+          },
+          {
+            "name": "makePrimitive internal/core.ts:643",
+            "ms": 0.1616
+          },
+          {
+            "name": "webidl.converters.HeadersInit undici/undici",
+            "ms": 0.1614
+          },
+          {
+            "name": "find internal/router.ts:311",
+            "ms": 0.1296
+          }
+        ],
+        "second": [
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.09659999999999999
+          },
+          {
+            "name": "parse src/SchemaAST.ts:2427",
+            "ms": 0.0648
+          },
+          {
+            "name": "toWeb http/HttpServerResponse.ts:1383",
+            "ms": 0.0648
+          },
+          {
+            "name": "makeRequest undici/undici",
+            "ms": 0.06459999999999999
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3120",
+            "ms": 0.033
+          },
+          {
+            "name": "fill undici/undici",
+            "ms": 0.033
+          },
+          {
+            "name": "(anonymous) src/Function.ts:255",
+            "ms": 0.032799999999999996
+          },
+          {
+            "name": "removeHost http/HttpServerRequest.ts:481",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "isValidHTTPToken undici/undici",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:4221",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.0324
+          },
+          {
+            "name": "mark scripts/harness.mjs:23",
+            "ms": 0.0324
+          },
+          {
+            "name": "getResponseState undici/undici",
+            "ms": 0.0324
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:181",
+            "ms": 0.0324
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.0322
+          }
+        ],
+        "openapi": [
+          {
+            "name": "recur schema/toJsonSchemaDocument.ts:374",
+            "ms": 0.938
+          },
+          {
+            "name": "reflect http-api/HttpApi.ts:254",
+            "ms": 0.41119999999999995
+          },
+          {
+            "name": "compileSchemaOps http-api/OpenApi.ts:679",
+            "ms": 0.389
+          },
+          {
+            "name": "onEndpoint http-api/OpenApi.ts:409",
+            "ms": 0.3235999999999999
+          },
+          {
+            "name": "makeOpenApi http-api/OpenApi.ts:330",
+            "ms": 0.29140000000000005
+          },
+          {
+            "name": "walk src/JsonSchema.ts:714",
+            "ms": 0.29059999999999997
+          },
+          {
+            "name": "on schema/toRepresentation.ts:190",
+            "ms": 0.28220000000000006
+          },
+          {
+            "name": "fromApi http-api/OpenApi.ts:300",
+            "ms": 0.22340000000000002
+          },
+          {
+            "name": "toRepresentations schema/toRepresentation.ts:37",
+            "ms": 0.19540000000000002
+          },
+          {
+            "name": "appendJsonSchema schema/toJsonSchemaDocument.ts:159",
+            "ms": 0.193
+          },
+          {
+            "name": "recur schema/toRepresentation.ts:179",
+            "ms": 0.1876
+          },
+          {
+            "name": "on schema/toJsonSchemaDocument.ts:405",
+            "ms": 0.1632
+          },
+          {
+            "name": "(anonymous) src/Array.ts:7899",
+            "ms": 0.16240000000000002
+          },
+          {
+            "name": "toJsonSchemaMultiDocument schema/toJsonSchemaDocument.ts:741",
+            "ms": 0.1574
+          },
+          {
+            "name": "compileCheck schema/toJsonSchemaDocument.ts:329",
+            "ms": 0.1308
+          }
+        ]
+      },
+      "evalFiles": [
+        {
+          "name": "node:internal/modules/esm/utils",
+          "ms": 21.99880000000013
+        },
+        {
+          "name": "node:internal/deps/undici/undici",
+          "ms": 13.978400000000022
+        },
+        {
+          "name": "node:internal/bootstrap/realm",
+          "ms": 13.448999999999996
+        },
+        {
+          "name": "(bundle)",
+          "ms": 5.266799999999998
+        },
+        {
+          "name": "(garbage collector)",
+          "ms": 3.2352000000000003
+        },
+        {
+          "name": "effect/src/SchemaAST.ts",
+          "ms": 1.8804
+        },
+        {
+          "name": "node:internal/crypto/util",
+          "ms": 1.632
+        },
+        {
+          "name": "effect/src/Schema.ts",
+          "ms": 1.3870000000000005
+        },
+        {
+          "name": "node:zlib",
+          "ms": 0.9294
+        },
+        {
+          "name": "effect/src/internal/core.ts",
+          "ms": 0.7026000000000001
+        },
+        {
+          "name": "node:net",
+          "ms": 0.5741999999999999
+        },
+        {
+          "name": "node:internal/crypto/keys",
+          "ms": 0.5154
+        },
+        {
+          "name": "node:internal/util",
+          "ms": 0.5124
+        },
+        {
+          "name": "node:internal/bootstrap/switches/is_main_thread",
+          "ms": 0.42039999999999994
+        },
+        {
+          "name": "effect/src/internal/schema/make.ts",
+          "ms": 0.38719999999999993
+        },
+        {
+          "name": "node:internal/streams/readable",
+          "ms": 0.321
+        },
+        {
+          "name": "node:internal/streams/writable",
+          "ms": 0.29079999999999995
+        },
+        {
+          "name": "effect/src/internal/effect.ts",
+          "ms": 0.289
+        },
+        {
+          "name": "effect/src/internal/schema/interpreter.ts",
+          "ms": 0.287
+        },
+        {
+          "name": "node:internal/webstreams/readablestream",
+          "ms": 0.2512
+        }
+      ],
+      "bundleBytesByCategory": {
+        "pipe / dual / predicates": 13592,
+        "Other": 205566,
+        "Effect runtime & Layer": 90797,
+        "Schema": 160375,
+        "Router (FindMyWay)": 23320,
+        "HttpApi definition": 48557,
+        "HttpApiBuilder": 19219,
+        "App code (generated API)": 1919,
+        "Harness": 1363
+      }
+    },
+    {
+      "size": "1x10",
+      "categoriesMs": {
+        "bootstrap": {
+          "Node bootstrap": 3.4350000000000005
+        },
+        "eval": {
+          "Parse & compile bundle": 21.972800000000117,
+          "Node built-ins": 1.830000000000001,
+          "Module top-level (unmapped)": 5.887199999999991,
+          "Effect runtime & Layer": 1.1416000000000002,
+          "Other": 1.4770000000000005,
+          "Schema": 3.8602,
+          "Node: undici init": 36.60820000000017,
+          "V8 (program)": 0.13040000000000002,
+          "Garbage collector": 2.1026,
+          "pipe / dual / predicates": 0.4828,
+          "HttpApi definition": 0.0964
+        },
+        "define": {
+          "Module top-level (unmapped)": 0.28359999999999996,
+          "Other": 0.5166000000000001,
+          "Schema": 2.162200000000001,
+          "HttpApi definition": 1.4826000000000004,
+          "pipe / dual / predicates": 0.29159999999999997
+        },
+        "layer": {
+          "Module top-level (unmapped)": 0.06420000000000001,
+          "Other": 0.16140000000000002,
+          "Effect runtime & Layer": 0.0322
+        },
+        "handler": {
+          "Other": 1.1532000000000002,
+          "Effect runtime & Layer": 3.5064,
+          "pipe / dual / predicates": 0.771,
+          "HttpApiBuilder": 2.5442,
+          "Schema": 0.5762,
+          "HttpApi definition": 0.29540000000000005,
+          "Router (FindMyWay)": 1.608800000000001
+        },
+        "first": {
+          "Other": 1.4432,
+          "Module top-level (unmapped)": 0.5171999999999998,
+          "Node: undici init": 4.161399999999998,
+          "Effect runtime & Layer": 0.6998000000000002,
+          "Router (FindMyWay)": 0.16199999999999998,
+          "Schema": 1.9602000000000013,
+          "pipe / dual / predicates": 0.0988,
+          "HttpApiBuilder": 0.20679999999999998
+        },
+        "second": {
+          "Node: undici init": 0.4192000000000001,
+          "Effect runtime & Layer": 0.093,
+          "Schema": 0.0952,
+          "Other": 0.06459999999999999
+        },
+        "openapi": {
+          "Other": 2.563200000000001,
+          "HttpApi definition": 3.8231999999999986,
+          "Effect runtime & Layer": 0.032,
+          "Schema": 4.307,
+          "Garbage collector": 1.4132000000000002,
+          "Module top-level (unmapped)": 0.06459999999999999,
+          "pipe / dual / predicates": 0.06459999999999999
+        }
+      },
+      "topFunctions": {
+        "bootstrap": [
+          {
+            "name": "getCLIOptionsFromBinding node:internal/options",
+            "ms": 0.359
+          },
+          {
+            "name": "(program) ((program))",
+            "ms": 0.354
+          },
+          {
+            "name": "decode node:internal/encoding",
+            "ms": 0.3218
+          },
+          {
+            "name": "normalizeString node:path",
+            "ms": 0.19500000000000003
+          },
+          {
+            "name": "evaluate (evaluate)",
+            "ms": 0.1938
+          },
+          {
+            "name": "readFileSync node:fs",
+            "ms": 0.19
+          },
+          {
+            "name": "getOrCreateModuleJob esm/loader",
+            "ms": 0.132
+          },
+          {
+            "name": "#cachedDefaultResolve esm/loader",
+            "ms": 0.12340000000000001
+          },
+          {
+            "name": "resolve node:path",
+            "ms": 0.1022
+          },
+          {
+            "name": "patchProcessObject process/pre_execution",
+            "ms": 0.0992
+          },
+          {
+            "name": "#getOrCreateModuleJobAfterResolve esm/loader",
+            "ms": 0.0968
+          },
+          {
+            "name": "#loadSync esm/loader",
+            "ms": 0.0948
+          },
+          {
+            "name": "read (read)",
+            "ms": 0.078
+          },
+          {
+            "name": "finalizeResolution esm/resolve",
+            "ms": 0.0708
+          },
+          {
+            "name": "prepareExecution process/pre_execution",
+            "ms": 0.0694
+          }
+        ],
+        "eval": [
+          {
+            "name": "compileSourceTextModule esm/utils",
+            "ms": 21.972800000000117
+          },
+          {
+            "name": "compileForInternalLoader bootstrap/realm",
+            "ms": 12.266999999999996
+          },
+          {
+            "name": "__require undici/undici",
+            "ms": 8.508599999999987
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 5.887199999999991
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 2.1026
+          },
+          {
+            "name": "internalBinding bootstrap/realm",
+            "ms": 1.4286000000000003
+          },
+          {
+            "name": "(anonymous) crypto/util",
+            "ms": 1.2100000000000002
+          },
+          {
+            "name": "add undici/undici",
+            "ms": 1.0726
+          },
+          {
+            "name": "(anonymous) node:zlib",
+            "ms": 0.9320000000000002
+          },
+          {
+            "name": "lib/llhttp/constants.js undici/undici",
+            "ms": 0.5434
+          },
+          {
+            "name": "(anonymous) crypto/keys",
+            "ms": 0.5087999999999999
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.4752
+          },
+          {
+            "name": "createSupportedAlgorithms crypto/util",
+            "ms": 0.4512
+          },
+          {
+            "name": "createWritableStdioStream switches/is_main_thread",
+            "ms": 0.44580000000000003
+          },
+          {
+            "name": "lib/web/webidl/index.js undici/undici",
+            "ms": 0.2916
+          }
+        ],
+        "define": [
+          {
+            "name": "defineApi generated/api-1x10.mjs:7",
+            "ms": 0.4844
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiEndpoint.ts:1048",
+            "ms": 0.29
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.28359999999999996
+          },
+          {
+            "name": "applyToSelfOrLastLinkEncodingIdempotent.stopAt schema/toCodec.ts:258",
+            "ms": 0.1946
+          },
+          {
+            "name": "validateSuccessResponse http-api/HttpApiEndpoint.ts:1257",
+            "ms": 0.1942
+          },
+          {
+            "name": "validateResponseExclusivity http-api/HttpApiEndpoint.ts:1328",
+            "ms": 0.1636
+          },
+          {
+            "name": "(anonymous) schema/toCodec.ts:15",
+            "ms": 0.1608
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:4792",
+            "ms": 0.1604
+          },
+          {
+            "name": "getSuccessResponse http-api/HttpApiEndpoint.ts:1219",
+            "ms": 0.1296
+          },
+          {
+            "name": "toCodecStringTreeASTStep schema/toCodec.ts:171",
+            "ms": 0.129
+          },
+          {
+            "name": "make$16 schema/make.ts:46",
+            "ms": 0.11920000000000001
+          },
+          {
+            "name": "get ast src/Schema.ts:15898",
+            "ms": 0.11259999999999999
+          },
+          {
+            "name": "(anonymous) src/Predicate.ts:1420",
+            "ms": 0.09860000000000001
+          },
+          {
+            "name": "getStatusEntry http-api/HttpApiEndpoint.ts:1312",
+            "ms": 0.09819999999999998
+          },
+          {
+            "name": "(anonymous) src/Schema.ts:15985",
+            "ms": 0.09780000000000001
+          }
+        ],
+        "layer": [
+          {
+            "name": "defineLayer generated/api-1x10.mjs:44",
+            "ms": 0.097
+          },
+          {
+            "name": "use http/HttpRouter.ts:547",
+            "ms": 0.0644
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.06420000000000001
+          },
+          {
+            "name": "fromBuildUnsafe src/Layer.ts:315",
+            "ms": 0.0322
+          }
+        ],
+        "handler": [
+          {
+            "name": "applyMiddleware http-api/HttpApiBuilder.ts:936",
+            "ms": 0.9638000000000001
+          },
+          {
+            "name": "_on internal/router.ts:116",
+            "ms": 0.5511999999999999
+          },
+          {
+            "name": "on internal/router.ts:72",
+            "ms": 0.4824
+          },
+          {
+            "name": "(anonymous) internal/effect.ts:1241",
+            "ms": 0.2909999999999999
+          },
+          {
+            "name": "handlerToHttpEffect http-api/HttpApiBuilder.ts:827",
+            "ms": 0.28220000000000006
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:443",
+            "ms": 0.25739999999999996
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.22700000000000004
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:143",
+            "ms": 0.2136
+          },
+          {
+            "name": "runLoop internal/effect.ts:625",
+            "ms": 0.1946
+          },
+          {
+            "name": "makeExit internal/core.ts:583",
+            "ms": 0.1946
+          },
+          {
+            "name": "makePrimitive internal/effect.ts:980",
+            "ms": 0.1946
+          },
+          {
+            "name": "handlerToRoute http-api/HttpApiBuilder.ts:921",
+            "ms": 0.19360000000000002
+          },
+          {
+            "name": "makeFiberContextCache internal/effect.ts:745",
+            "ms": 0.1624
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:337",
+            "ms": 0.1624
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiBuilder.ts:1233",
+            "ms": 0.13340000000000002
+          }
+        ],
+        "first": [
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.5171999999999998
+          },
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.4128
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.412
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:212",
+            "ms": 0.3878
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.35640000000000005
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3757",
+            "ms": 0.35539999999999994
+          },
+          {
+            "name": "compile schema/interpreter.ts:120",
+            "ms": 0.1938
+          },
+          {
+            "name": "webidl.converters.HeadersInit undici/undici",
+            "ms": 0.19379999999999997
+          },
+          {
+            "name": "readAllBytes undici/undici",
+            "ms": 0.18919999999999998
+          },
+          {
+            "name": "find internal/router.ts:311",
+            "ms": 0.16199999999999998
+          },
+          {
+            "name": "appendHeader undici/undici",
+            "ms": 0.1616
+          },
+          {
+            "name": "toWeb http/HttpServerResponse.ts:1383",
+            "ms": 0.1616
+          },
+          {
+            "name": "webidl.converters.unsigned short undici/undici",
+            "ms": 0.161
+          },
+          {
+            "name": "enqueue webstreams/readablestream",
+            "ms": 0.161
+          },
+          {
+            "name": "_Headers undici/undici",
+            "ms": 0.1608
+          }
+        ],
+        "second": [
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.1296
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:347",
+            "ms": 0.06459999999999999
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.06459999999999999
+          },
+          {
+            "name": "makePrimitive internal/effect.ts:980",
+            "ms": 0.0348
+          },
+          {
+            "name": "makeResponse undici/undici",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "setURLContextFromBinding node:internal/url",
+            "ms": 0.0324
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3120",
+            "ms": 0.0324
+          },
+          {
+            "name": "enqueue webstreams/readablestream",
+            "ms": 0.0322
+          },
+          {
+            "name": "collectIssues src/SchemaAST.ts:5049",
+            "ms": 0.0322
+          },
+          {
+            "name": "makePrimitiveProto internal/effect.ts:1419",
+            "ms": 0.0322
+          },
+          {
+            "name": "(anonymous) webstreams/util",
+            "ms": 0.032
+          },
+          {
+            "name": "_Headers undici/undici",
+            "ms": 0.032
+          },
+          {
+            "name": "initializeResponse undici/undici",
+            "ms": 0.032
+          },
+          {
+            "name": "get status undici/undici",
+            "ms": 0.0318
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:4832",
+            "ms": 0.030600000000000002
+          }
+        ],
+        "openapi": [
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 1.4132000000000002
+          },
+          {
+            "name": "recur schema/toJsonSchemaDocument.ts:374",
+            "ms": 1.0184
+          },
+          {
+            "name": "onEndpoint http-api/OpenApi.ts:409",
+            "ms": 0.7637999999999998
+          },
+          {
+            "name": "reflect http-api/HttpApi.ts:254",
+            "ms": 0.6073999999999999
+          },
+          {
+            "name": "compileSchemaOps http-api/OpenApi.ts:679",
+            "ms": 0.4837999999999999
+          },
+          {
+            "name": "walk src/JsonSchema.ts:714",
+            "ms": 0.4745999999999999
+          },
+          {
+            "name": "makeOpenApi http-api/OpenApi.ts:330",
+            "ms": 0.3848000000000001
+          },
+          {
+            "name": "assignProperty internal/record.ts:2",
+            "ms": 0.3618
+          },
+          {
+            "name": "recur schema/toRepresentation.ts:179",
+            "ms": 0.32339999999999997
+          },
+          {
+            "name": "on schema/toJsonSchemaDocument.ts:405",
+            "ms": 0.32320000000000004
+          },
+          {
+            "name": "toRepresentations schema/toRepresentation.ts:37",
+            "ms": 0.29460000000000003
+          },
+          {
+            "name": "appendJsonSchema schema/toJsonSchemaDocument.ts:159",
+            "ms": 0.2586
+          },
+          {
+            "name": "decodeUriFragment src/JsonPointer.ts:91",
+            "ms": 0.2572
+          },
+          {
+            "name": "(anonymous) src/Array.ts:7899",
+            "ms": 0.2512
+          },
+          {
+            "name": "fromApi http-api/OpenApi.ts:300",
+            "ms": 0.22499999999999998
+          }
+        ]
+      },
+      "evalFiles": [
+        {
+          "name": "node:internal/modules/esm/utils",
+          "ms": 21.972800000000117
+        },
+        {
+          "name": "node:internal/deps/undici/undici",
+          "ms": 14.336800000000007
+        },
+        {
+          "name": "node:internal/bootstrap/realm",
+          "ms": 13.946400000000004
+        },
+        {
+          "name": "(bundle)",
+          "ms": 5.887199999999991
+        },
+        {
+          "name": "(garbage collector)",
+          "ms": 2.1026
+        },
+        {
+          "name": "node:internal/crypto/util",
+          "ms": 1.6612000000000005
+        },
+        {
+          "name": "effect/src/Schema.ts",
+          "ms": 1.4532000000000005
+        },
+        {
+          "name": "effect/src/SchemaAST.ts",
+          "ms": 1.3498
+        },
+        {
+          "name": "node:zlib",
+          "ms": 0.9320000000000002
+        },
+        {
+          "name": "node:internal/crypto/keys",
+          "ms": 0.5087999999999999
+        },
+        {
+          "name": "effect/src/internal/core.ts",
+          "ms": 0.495
+        },
+        {
+          "name": "node:internal/bootstrap/switches/is_main_thread",
+          "ms": 0.4778
+        },
+        {
+          "name": "node:net",
+          "ms": 0.38619999999999993
+        },
+        {
+          "name": "node:internal/util",
+          "ms": 0.3462
+        },
+        {
+          "name": "effect/src/internal/schema/interpreter.ts",
+          "ms": 0.3226
+        },
+        {
+          "name": "effect/src/Context.ts",
+          "ms": 0.29079999999999995
+        },
+        {
+          "name": "node:internal/webstreams/readablestream",
+          "ms": 0.289
+        },
+        {
+          "name": "effect/src/SchemaParser.ts",
+          "ms": 0.2848
+        },
+        {
+          "name": "(compileFunction)",
+          "ms": 0.2588
+        },
+        {
+          "name": "effect/src/http/HttpServerResponse.ts",
+          "ms": 0.2286
+        }
+      ],
+      "bundleBytesByCategory": {
+        "pipe / dual / predicates": 13592,
+        "Other": 205566,
+        "Effect runtime & Layer": 90797,
+        "Schema": 160375,
+        "Router (FindMyWay)": 23320,
+        "HttpApi definition": 48689,
+        "HttpApiBuilder": 19219,
+        "App code (generated API)": 4391,
+        "Harness": 1363
+      }
+    },
+    {
+      "size": "5x10",
+      "categoriesMs": {
+        "bootstrap": {
+          "Node bootstrap": 3.4562000000000013
+        },
+        "eval": {
+          "Parse & compile bundle": 22.22619999999999,
+          "Node built-ins": 1.8073999999999997,
+          "pipe / dual / predicates": 0.5795999999999999,
+          "Module top-level (unmapped)": 5.633,
+          "Effect runtime & Layer": 1.2192,
+          "Schema": 4.3085999999999975,
+          "Node: undici init": 35.42700000000011,
+          "Other": 1.4966,
+          "V8 (program)": 0.34619999999999995,
+          "Garbage collector": 4.580400000000001,
+          "HttpApi definition": 0.1294
+        },
+        "define": {
+          "Module top-level (unmapped)": 0.8368,
+          "Other": 0.7119999999999999,
+          "Schema": 4.515999999999999,
+          "pipe / dual / predicates": 1.1795999999999998,
+          "HttpApi definition": 2.5374000000000008,
+          "Effect runtime & Layer": 0.06459999999999999
+        },
+        "layer": {
+          "Module top-level (unmapped)": 0.1974,
+          "Effect runtime & Layer": 0.0654,
+          "Other": 0.227
+        },
+        "handler": {
+          "Other": 1.3663999999999998,
+          "Effect runtime & Layer": 4.543600000000001,
+          "pipe / dual / predicates": 0.7382,
+          "Garbage collector": 1.4056,
+          "HttpApiBuilder": 2.3748000000000014,
+          "Schema": 2.3169999999999997,
+          "HttpApi definition": 0.42079999999999995,
+          "Router (FindMyWay)": 1.8410000000000002
+        },
+        "first": {
+          "Module top-level (unmapped)": 0.5069999999999999,
+          "Node: undici init": 4.226800000000002,
+          "Other": 1.2823999999999998,
+          "Effect runtime & Layer": 0.7091999999999999,
+          "Router (FindMyWay)": 0.15559999999999996,
+          "HttpApiBuilder": 0.2614,
+          "Schema": 2.0294000000000003,
+          "pipe / dual / predicates": 0.06459999999999999
+        },
+        "second": {
+          "Node: undici init": 0.2936000000000001,
+          "Effect runtime & Layer": 0.1294,
+          "Other": 0.1958,
+          "Schema": 0.033600000000000005
+        },
+        "openapi": {
+          "Module top-level (unmapped)": 0.0648,
+          "HttpApi definition": 6.921999999999995,
+          "Other": 4.787599999999999,
+          "Schema": 7.421999999999999,
+          "Garbage collector": 1.169,
+          "pipe / dual / predicates": 0.13119999999999998
+        }
+      },
+      "topFunctions": {
+        "bootstrap": [
+          {
+            "name": "decode node:internal/encoding",
+            "ms": 0.3846
+          },
+          {
+            "name": "(program) ((program))",
+            "ms": 0.366
+          },
+          {
+            "name": "getCLIOptionsFromBinding node:internal/options",
+            "ms": 0.29860000000000003
+          },
+          {
+            "name": "#getOrCreateModuleJobAfterResolve esm/loader",
+            "ms": 0.24719999999999998
+          },
+          {
+            "name": "normalizeString node:path",
+            "ms": 0.23539999999999997
+          },
+          {
+            "name": "patchProcessObject process/pre_execution",
+            "ms": 0.20959999999999995
+          },
+          {
+            "name": "readFileSync node:fs",
+            "ms": 0.1434
+          },
+          {
+            "name": "finalizeResolution esm/resolve",
+            "ms": 0.10060000000000001
+          },
+          {
+            "name": "realpathSync node:fs",
+            "ms": 0.09820000000000001
+          },
+          {
+            "name": "resolve node:path",
+            "ms": 0.0978
+          },
+          {
+            "name": "getSourceSync esm/load",
+            "ms": 0.0888
+          },
+          {
+            "name": "setURLContextFromBinding node:internal/url",
+            "ms": 0.08220000000000001
+          },
+          {
+            "name": "read (read)",
+            "ms": 0.065
+          },
+          {
+            "name": "getCLIOptionsValues (getCLIOptionsValues)",
+            "ms": 0.0648
+          },
+          {
+            "name": "(anonymous) main/run_main_module",
+            "ms": 0.06459999999999999
+          }
+        ],
+        "eval": [
+          {
+            "name": "compileSourceTextModule esm/utils",
+            "ms": 22.22619999999999
+          },
+          {
+            "name": "compileForInternalLoader bootstrap/realm",
+            "ms": 11.699199999999989
+          },
+          {
+            "name": "__require undici/undici",
+            "ms": 8.127799999999999
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 5.633
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 4.580400000000001
+          },
+          {
+            "name": "internalBinding bootstrap/realm",
+            "ms": 1.4558000000000006
+          },
+          {
+            "name": "(anonymous) crypto/util",
+            "ms": 1.2169999999999999
+          },
+          {
+            "name": "(anonymous) node:zlib",
+            "ms": 0.8897999999999999
+          },
+          {
+            "name": "lib/llhttp/constants.js undici/undici",
+            "ms": 0.5481999999999999
+          },
+          {
+            "name": "(anonymous) crypto/keys",
+            "ms": 0.4858
+          },
+          {
+            "name": "compileFunction (compileFunction)",
+            "ms": 0.43440000000000006
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.41420000000000007
+          },
+          {
+            "name": "createWritableStdioStream switches/is_main_thread",
+            "ms": 0.3904
+          },
+          {
+            "name": "createSupportedAlgorithms crypto/util",
+            "ms": 0.35580000000000006
+          },
+          {
+            "name": "(anonymous) (program)",
+            "ms": 0.34619999999999995
+          }
+        ],
+        "define": [
+          {
+            "name": "make$16 schema/make.ts:46",
+            "ms": 1.2118000000000002
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.8368
+          },
+          {
+            "name": "defineApi generated/api-5x10.mjs:7",
+            "ms": 0.6145999999999998
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1577",
+            "ms": 0.48879999999999996
+          },
+          {
+            "name": "validateSuccessResponse http-api/HttpApiEndpoint.ts:1257",
+            "ms": 0.4714
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1540",
+            "ms": 0.32580000000000003
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiEndpoint.ts:1048",
+            "ms": 0.3174
+          },
+          {
+            "name": "validateResponseExclusivity http-api/HttpApiEndpoint.ts:1328",
+            "ms": 0.30140000000000006
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:4792",
+            "ms": 0.1884
+          },
+          {
+            "name": "(anonymous) src/Predicate.ts:1420",
+            "ms": 0.16739999999999997
+          },
+          {
+            "name": "toCodecJsonASTStep schema/toCodec.ts:59",
+            "ms": 0.1632
+          },
+          {
+            "name": "getPayload http-api/HttpApiEndpoint.ts:1181",
+            "ms": 0.16260000000000002
+          },
+          {
+            "name": "(anonymous) src/Schema.ts:15985",
+            "ms": 0.1626
+          },
+          {
+            "name": "recur src/SchemaAST.ts:3196",
+            "ms": 0.1624
+          },
+          {
+            "name": "getSuccessResponse http-api/HttpApiEndpoint.ts:1219",
+            "ms": 0.16160000000000002
+          }
+        ],
+        "layer": [
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.1974
+          },
+          {
+            "name": "defineLayer generated/api-5x10.mjs:160",
+            "ms": 0.1618
+          },
+          {
+            "name": "(anonymous) internal/core.ts:525",
+            "ms": 0.0654
+          },
+          {
+            "name": "now (now)",
+            "ms": 0.032799999999999996
+          },
+          {
+            "name": "mark scripts/harness.mjs:23",
+            "ms": 0.0324
+          }
+        ],
+        "handler": [
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 1.4056
+          },
+          {
+            "name": "make$16 schema/make.ts:46",
+            "ms": 1.0403999999999998
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiBuilder.ts:146",
+            "ms": 0.7148000000000001
+          },
+          {
+            "name": "_on internal/router.ts:116",
+            "ms": 0.6171999999999999
+          },
+          {
+            "name": "on internal/router.ts:72",
+            "ms": 0.41140000000000004
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:143",
+            "ms": 0.384
+          },
+          {
+            "name": "handlerToHttpEffect http-api/HttpApiBuilder.ts:827",
+            "ms": 0.37460000000000004
+          },
+          {
+            "name": "handlerToRoute http-api/HttpApiBuilder.ts:921",
+            "ms": 0.35080000000000006
+          },
+          {
+            "name": "(anonymous) internal/effect.ts:1241",
+            "ms": 0.3258000000000001
+          },
+          {
+            "name": "go internal/effect.ts:5093",
+            "ms": 0.2582
+          },
+          {
+            "name": "mapOrSame src/SchemaAST.ts:4487",
+            "ms": 0.2012
+          },
+          {
+            "name": "flipEncoding src/SchemaAST.ts:4756",
+            "ms": 0.16460000000000002
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.16240000000000002
+          },
+          {
+            "name": "makeExit internal/core.ts:583",
+            "ms": 0.16240000000000002
+          },
+          {
+            "name": "evaluate internal/effect.ts:583",
+            "ms": 0.16219999999999998
+          }
+        ],
+        "first": [
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.5537999999999998
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.5069999999999999
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.3894000000000001
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3757",
+            "ms": 0.32620000000000005
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:212",
+            "ms": 0.3246
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.31720000000000004
+          },
+          {
+            "name": "compile schema/interpreter.ts:120",
+            "ms": 0.283
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiBuilder.ts:858",
+            "ms": 0.1972
+          },
+          {
+            "name": "(anonymous) schema/interpreter.ts:208",
+            "ms": 0.1952
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:347",
+            "ms": 0.1948
+          },
+          {
+            "name": "parse src/SchemaAST.ts:2427",
+            "ms": 0.19460000000000002
+          },
+          {
+            "name": "webidl.converters.HeadersInit undici/undici",
+            "ms": 0.16440000000000002
+          },
+          {
+            "name": "(anonymous) internal/effect.ts:1241",
+            "ms": 0.16319999999999998
+          },
+          {
+            "name": "readableByteStreamControllerEnqueue webstreams/readablestream",
+            "ms": 0.16179999999999997
+          },
+          {
+            "name": "appendHeader undici/undici",
+            "ms": 0.1616
+          }
+        ],
+        "second": [
+          {
+            "name": "makeRequest undici/undici",
+            "ms": 0.09759999999999999
+          },
+          {
+            "name": "toWeb http/HttpServerResponse.ts:1383",
+            "ms": 0.06559999999999999
+          },
+          {
+            "name": "getCurrentFiber internal/effect.ts:484",
+            "ms": 0.0648
+          },
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.0346
+          },
+          {
+            "name": "assignProperty internal/record.ts:2",
+            "ms": 0.033600000000000005
+          },
+          {
+            "name": "hasPropertySignature src/SchemaAST.ts:3496",
+            "ms": 0.033600000000000005
+          },
+          {
+            "name": "makeResponse undici/undici",
+            "ms": 0.032799999999999996
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "entity generated/api-5x10.mjs:158",
+            "ms": 0.0324
+          },
+          {
+            "name": "IteratorImpl internal/effect.ts:1437",
+            "ms": 0.0324
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:358",
+            "ms": 0.0324
+          },
+          {
+            "name": "fill undici/undici",
+            "ms": 0.0322
+          },
+          {
+            "name": "evaluate internal/effect.ts:583",
+            "ms": 0.0322
+          },
+          {
+            "name": "readableByteStreamControllerEnqueue webstreams/readablestream",
+            "ms": 0.032
+          },
+          {
+            "name": "set TextDecoder (set TextDecoder)",
+            "ms": 0.0318
+          }
+        ],
+        "openapi": [
+          {
+            "name": "recur schema/toJsonSchemaDocument.ts:374",
+            "ms": 1.6537999999999997
+          },
+          {
+            "name": "assignProperty internal/record.ts:2",
+            "ms": 1.2164000000000001
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 1.169
+          },
+          {
+            "name": "cloneOpenAPISpec http-api/OpenApi.ts:238",
+            "ms": 0.9622
+          },
+          {
+            "name": "compileSchemaOps http-api/OpenApi.ts:679",
+            "ms": 0.8492
+          },
+          {
+            "name": "onEndpoint http-api/OpenApi.ts:409",
+            "ms": 0.8192000000000002
+          },
+          {
+            "name": "reflect http-api/HttpApi.ts:254",
+            "ms": 0.6204
+          },
+          {
+            "name": "on schema/toJsonSchemaDocument.ts:405",
+            "ms": 0.6184
+          },
+          {
+            "name": "walk src/JsonSchema.ts:714",
+            "ms": 0.5776
+          },
+          {
+            "name": "on schema/toRepresentation.ts:190",
+            "ms": 0.5495999999999999
+          },
+          {
+            "name": "makeOpenApi http-api/OpenApi.ts:330",
+            "ms": 0.5121999999999999
+          },
+          {
+            "name": "selectReferences http-api/OpenApi.ts:763",
+            "ms": 0.45759999999999995
+          },
+          {
+            "name": "getCandidate schema/toRepresentation.ts:112",
+            "ms": 0.3634
+          },
+          {
+            "name": "visit schema/toRepresentation.ts:141",
+            "ms": 0.362
+          },
+          {
+            "name": "rewriteSchemaRef src/JsonSchema.ts:762",
+            "ms": 0.3586
+          }
+        ]
+      },
+      "evalFiles": [
+        {
+          "name": "node:internal/modules/esm/utils",
+          "ms": 22.22619999999999
+        },
+        {
+          "name": "node:internal/deps/undici/undici",
+          "ms": 13.574199999999985
+        },
+        {
+          "name": "node:internal/bootstrap/realm",
+          "ms": 13.449399999999985
+        },
+        {
+          "name": "(bundle)",
+          "ms": 5.633
+        },
+        {
+          "name": "(garbage collector)",
+          "ms": 4.580400000000001
+        },
+        {
+          "name": "effect/src/SchemaAST.ts",
+          "ms": 1.7058000000000006
+        },
+        {
+          "name": "node:internal/crypto/util",
+          "ms": 1.5727999999999995
+        },
+        {
+          "name": "effect/src/Schema.ts",
+          "ms": 1.2014000000000005
+        },
+        {
+          "name": "node:zlib",
+          "ms": 0.922
+        },
+        {
+          "name": "node:net",
+          "ms": 0.5824
+        },
+        {
+          "name": "effect/src/internal/core.ts",
+          "ms": 0.5375999999999999
+        },
+        {
+          "name": "node:internal/util",
+          "ms": 0.5066
+        },
+        {
+          "name": "node:internal/crypto/keys",
+          "ms": 0.4858
+        },
+        {
+          "name": "(compileFunction)",
+          "ms": 0.43440000000000006
+        },
+        {
+          "name": "effect/src/internal/schema/make.ts",
+          "ms": 0.42119999999999996
+        },
+        {
+          "name": "node:internal/bootstrap/switches/is_main_thread",
+          "ms": 0.3904
+        },
+        {
+          "name": "(program)",
+          "ms": 0.34619999999999995
+        },
+        {
+          "name": "effect/src/internal/schema/interpreter.ts",
+          "ms": 0.3228
+        },
+        {
+          "name": "effect/src/internal/effect.ts",
+          "ms": 0.293
+        },
+        {
+          "name": "node:internal/streams/readable",
+          "ms": 0.2824
+        }
+      ],
+      "bundleBytesByCategory": {
+        "pipe / dual / predicates": 13592,
+        "Other": 205566,
+        "Effect runtime & Layer": 90797,
+        "Schema": 160375,
+        "Router (FindMyWay)": 23320,
+        "HttpApi definition": 48689,
+        "HttpApiBuilder": 19219,
+        "App code (generated API)": 19075,
+        "Harness": 1363
+      }
+    },
+    {
+      "size": "10x10",
+      "categoriesMs": {
+        "bootstrap": {
+          "Node bootstrap": 3.5438000000000005
+        },
+        "eval": {
+          "Parse & compile bundle": 23.20179999999996,
+          "Node built-ins": 1.9190000000000007,
+          "Module top-level (unmapped)": 5.598799999999997,
+          "Effect runtime & Layer": 1.427,
+          "Schema": 4.603199999999999,
+          "Node: undici init": 37.719200000000164,
+          "Garbage collector": 3.187199999999999,
+          "Other": 1.4609999999999996,
+          "pipe / dual / predicates": 0.2614,
+          "V8 (program)": 0.0324,
+          "HttpApi definition": 0.066
+        },
+        "define": {
+          "Module top-level (unmapped)": 1.3139999999999996,
+          "Schema": 7.109000000000003,
+          "Other": 1.4323999999999997,
+          "HttpApi definition": 3.1200000000000014,
+          "Garbage collector": 1.399,
+          "pipe / dual / predicates": 1.1632,
+          "Effect runtime & Layer": 0.032600000000000004
+        },
+        "layer": {
+          "Module top-level (unmapped)": 0.291,
+          "Other": 0.097,
+          "Effect runtime & Layer": 0.032,
+          "HttpApiBuilder": 0.06459999999999999
+        },
+        "handler": {
+          "Other": 1.2086000000000001,
+          "Effect runtime & Layer": 5.117400000000001,
+          "Router (FindMyWay)": 3.016000000000002,
+          "HttpApiBuilder": 3.471199999999999,
+          "Schema": 2.4030000000000014,
+          "pipe / dual / predicates": 0.9360000000000002,
+          "HttpApi definition": 0.5784000000000001
+        },
+        "first": {
+          "Module top-level (unmapped)": 0.5481999999999999,
+          "Node: undici init": 4.318799999999996,
+          "Other": 1.631,
+          "Router (FindMyWay)": 0.1618,
+          "Effect runtime & Layer": 0.6931999999999999,
+          "Schema": 1.8544000000000007,
+          "HttpApiBuilder": 0.098,
+          "pipe / dual / predicates": 0.2908,
+          "Node built-ins": 0.0324
+        },
+        "second": {
+          "Node: undici init": 0.45159999999999995,
+          "Effect runtime & Layer": 0.09759999999999999,
+          "Schema": 0.0648,
+          "Other": 0.06420000000000001,
+          "HttpApiBuilder": 0.026
+        },
+        "openapi": {
+          "Node built-ins": 0.0322,
+          "HttpApi definition": 8.655199999999986,
+          "Effect runtime & Layer": 0.38459999999999994,
+          "pipe / dual / predicates": 0.325,
+          "Other": 7.005199999999992,
+          "Garbage collector": 4.2332,
+          "Schema": 9.842199999999995,
+          "Module top-level (unmapped)": 0.0324
+        }
+      },
+      "topFunctions": {
+        "bootstrap": [
+          {
+            "name": "decode node:internal/encoding",
+            "ms": 0.3904000000000001
+          },
+          {
+            "name": "(program) ((program))",
+            "ms": 0.3618
+          },
+          {
+            "name": "getCLIOptionsFromBinding node:internal/options",
+            "ms": 0.36160000000000003
+          },
+          {
+            "name": "normalizeString node:path",
+            "ms": 0.26639999999999997
+          },
+          {
+            "name": "patchProcessObject process/pre_execution",
+            "ms": 0.171
+          },
+          {
+            "name": "prepareExecution process/pre_execution",
+            "ms": 0.1626
+          },
+          {
+            "name": "requireBuiltin bootstrap/realm",
+            "ms": 0.127
+          },
+          {
+            "name": "readFileSync node:fs",
+            "ms": 0.0978
+          },
+          {
+            "name": "resolve node:path",
+            "ms": 0.09779999999999998
+          },
+          {
+            "name": "evaluate (evaluate)",
+            "ms": 0.0972
+          },
+          {
+            "name": "#loadSync esm/loader",
+            "ms": 0.0942
+          },
+          {
+            "name": "#getOrCreateModuleJobAfterResolve esm/loader",
+            "ms": 0.094
+          },
+          {
+            "name": "fileURLToPath node:internal/url",
+            "ms": 0.08979999999999999
+          },
+          {
+            "name": "(anonymous) node:internal/validators",
+            "ms": 0.08940000000000001
+          },
+          {
+            "name": "resolveSync esm/loader",
+            "ms": 0.0686
+          }
+        ],
+        "eval": [
+          {
+            "name": "compileSourceTextModule esm/utils",
+            "ms": 23.20179999999996
+          },
+          {
+            "name": "compileForInternalLoader bootstrap/realm",
+            "ms": 11.677399999999988
+          },
+          {
+            "name": "__require undici/undici",
+            "ms": 8.342199999999997
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 5.598799999999997
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 3.187199999999999
+          },
+          {
+            "name": "internalBinding bootstrap/realm",
+            "ms": 1.8182
+          },
+          {
+            "name": "lib/core/tree.js undici/undici",
+            "ms": 1.0283999999999998
+          },
+          {
+            "name": "(anonymous) crypto/util",
+            "ms": 1.0194
+          },
+          {
+            "name": "add undici/undici",
+            "ms": 0.9626000000000001
+          },
+          {
+            "name": "(anonymous) node:zlib",
+            "ms": 0.896
+          },
+          {
+            "name": "(anonymous) crypto/keys",
+            "ms": 0.486
+          },
+          {
+            "name": "lib/llhttp/constants.js undici/undici",
+            "ms": 0.4796000000000001
+          },
+          {
+            "name": "createWritableStdioStream switches/is_main_thread",
+            "ms": 0.47459999999999997
+          },
+          {
+            "name": "createSupportedAlgorithms crypto/util",
+            "ms": 0.4456
+          },
+          {
+            "name": "set TextDecoder (set TextDecoder)",
+            "ms": 0.3554
+          }
+        ],
+        "define": [
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 1.399
+          },
+          {
+            "name": "make$16 schema/make.ts:46",
+            "ms": 1.3985999999999992
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 1.3139999999999996
+          },
+          {
+            "name": "defineApi generated/api-10x10.mjs:7",
+            "ms": 1.2708
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiEndpoint.ts:1048",
+            "ms": 0.6529999999999999
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1577",
+            "ms": 0.6115999999999999
+          },
+          {
+            "name": "validateSuccessResponse http-api/HttpApiEndpoint.ts:1257",
+            "ms": 0.45820000000000005
+          },
+          {
+            "name": "struct src/SchemaAST.ts:3273",
+            "ms": 0.3894
+          },
+          {
+            "name": "copy src/SchemaAST.ts:4341",
+            "ms": 0.3266
+          },
+          {
+            "name": "(anonymous) src/Schema.ts:15985",
+            "ms": 0.2824
+          },
+          {
+            "name": "_rebuild src/SchemaAST.ts:3159",
+            "ms": 0.25880000000000003
+          },
+          {
+            "name": "getSuccessResponse http-api/HttpApiEndpoint.ts:1219",
+            "ms": 0.23100000000000004
+          },
+          {
+            "name": "(anonymous) src/Predicate.ts:1420",
+            "ms": 0.228
+          },
+          {
+            "name": "mapOrSame src/SchemaAST.ts:4487",
+            "ms": 0.22760000000000002
+          },
+          {
+            "name": "isSchema src/Schema.ts:2337",
+            "ms": 0.22600000000000003
+          }
+        ],
+        "layer": [
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.291
+          },
+          {
+            "name": "defineLayer generated/api-10x10.mjs:305",
+            "ms": 0.097
+          },
+          {
+            "name": "layer$1 http-api/HttpApiBuilder.ts:66",
+            "ms": 0.06459999999999999
+          },
+          {
+            "name": "ContImpl internal/effect.ts:1484",
+            "ms": 0.032
+          }
+        ],
+        "handler": [
+          {
+            "name": "_on internal/router.ts:116",
+            "ms": 1.2433999999999998
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiBuilder.ts:146",
+            "ms": 1.0938
+          },
+          {
+            "name": "on internal/router.ts:72",
+            "ms": 0.8053999999999999
+          },
+          {
+            "name": "handlerToRoute http-api/HttpApiBuilder.ts:921",
+            "ms": 0.5202
+          },
+          {
+            "name": "handlerToHttpEffect http-api/HttpApiBuilder.ts:827",
+            "ms": 0.4396
+          },
+          {
+            "name": "(anonymous) internal/effect.ts:1241",
+            "ms": 0.4216
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.3168
+          },
+          {
+            "name": "runLoop internal/effect.ts:625",
+            "ms": 0.2922
+          },
+          {
+            "name": "copy src/SchemaAST.ts:4341",
+            "ms": 0.29059999999999997
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:143",
+            "ms": 0.25880000000000003
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1577",
+            "ms": 0.25780000000000003
+          },
+          {
+            "name": "go internal/effect.ts:5093",
+            "ms": 0.22299999999999998
+          },
+          {
+            "name": "registerHandler http-api/HttpApiBuilder.ts:656",
+            "ms": 0.2184
+          },
+          {
+            "name": "mapOrSame src/SchemaAST.ts:4487",
+            "ms": 0.2124
+          },
+          {
+            "name": "make$16 schema/make.ts:46",
+            "ms": 0.196
+          }
+        ],
+        "first": [
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.577
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.5481999999999999
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.451
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.4139999999999999
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3120",
+            "ms": 0.3224
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:212",
+            "ms": 0.2892
+          },
+          {
+            "name": "compile schema/interpreter.ts:120",
+            "ms": 0.25739999999999996
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.226
+          },
+          {
+            "name": "webidl.converters.HeadersInit undici/undici",
+            "ms": 0.21959999999999996
+          },
+          {
+            "name": "get url undici/undici",
+            "ms": 0.2194
+          },
+          {
+            "name": "parse src/SchemaAST.ts:2427",
+            "ms": 0.2188
+          },
+          {
+            "name": "fromWeb http/HttpServerRequest.ts:434",
+            "ms": 0.19519999999999998
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3757",
+            "ms": 0.1938
+          },
+          {
+            "name": "enqueue webstreams/readablestream",
+            "ms": 0.19360000000000002
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:358",
+            "ms": 0.18560000000000001
+          }
+        ],
+        "second": [
+          {
+            "name": "extractBody undici/undici",
+            "ms": 0.09700000000000002
+          },
+          {
+            "name": "makeRequest undici/undici",
+            "ms": 0.065
+          },
+          {
+            "name": "makePrimitive internal/core.ts:643",
+            "ms": 0.032799999999999996
+          },
+          {
+            "name": "evaluate internal/effect.ts:583",
+            "ms": 0.032799999999999996
+          },
+          {
+            "name": "setURLContextFromBinding node:internal/url",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "webidl.util.Type undici/undici",
+            "ms": 0.0324
+          },
+          {
+            "name": "AbortController node:internal/abort_controller",
+            "ms": 0.0324
+          },
+          {
+            "name": "parse src/SchemaAST.ts:2427",
+            "ms": 0.0324
+          },
+          {
+            "name": "readableByteStreamControllerDequeueChunk webstreams/readablestream",
+            "ms": 0.0324
+          },
+          {
+            "name": "(anonymous) schema/interpreter.ts:208",
+            "ms": 0.0324
+          },
+          {
+            "name": "readAllBytes undici/undici",
+            "ms": 0.0324
+          },
+          {
+            "name": "get method http/HttpServerRequest.ts:532",
+            "ms": 0.0322
+          },
+          {
+            "name": "setupReadableByteStreamController webstreams/readablestream",
+            "ms": 0.032
+          },
+          {
+            "name": "getCont internal/effect.ts:680",
+            "ms": 0.032
+          },
+          {
+            "name": "getHeadersList undici/undici",
+            "ms": 0.032
+          }
+        ],
+        "openapi": [
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 4.2332
+          },
+          {
+            "name": "recur schema/toJsonSchemaDocument.ts:374",
+            "ms": 1.6120000000000008
+          },
+          {
+            "name": "assignProperty internal/record.ts:2",
+            "ms": 1.5784000000000005
+          },
+          {
+            "name": "onEndpoint http-api/OpenApi.ts:409",
+            "ms": 1.4218000000000002
+          },
+          {
+            "name": "walk src/JsonSchema.ts:714",
+            "ms": 1.133
+          },
+          {
+            "name": "on schema/toJsonSchemaDocument.ts:405",
+            "ms": 1.0739999999999998
+          },
+          {
+            "name": "cloneOpenAPISpec http-api/OpenApi.ts:238",
+            "ms": 1.0086000000000002
+          },
+          {
+            "name": "compileSchemaOps http-api/OpenApi.ts:679",
+            "ms": 0.8482000000000001
+          },
+          {
+            "name": "getCandidate schema/toRepresentation.ts:112",
+            "ms": 0.8188
+          },
+          {
+            "name": "decodeUriFragment src/JsonPointer.ts:91",
+            "ms": 0.8067999999999999
+          },
+          {
+            "name": "reflect http-api/HttpApi.ts:254",
+            "ms": 0.7693999999999999
+          },
+          {
+            "name": "selectReferences http-api/OpenApi.ts:763",
+            "ms": 0.5805999999999999
+          },
+          {
+            "name": "on schema/toRepresentation.ts:190",
+            "ms": 0.5554
+          },
+          {
+            "name": "visit schema/toRepresentation.ts:141",
+            "ms": 0.46959999999999996
+          },
+          {
+            "name": "makeOpenApi http-api/OpenApi.ts:330",
+            "ms": 0.4261999999999999
+          }
+        ]
+      },
+      "evalFiles": [
+        {
+          "name": "node:internal/modules/esm/utils",
+          "ms": 23.20179999999996
+        },
+        {
+          "name": "node:internal/deps/undici/undici",
+          "ms": 15.301599999999986
+        },
+        {
+          "name": "node:internal/bootstrap/realm",
+          "ms": 13.649999999999997
+        },
+        {
+          "name": "(bundle)",
+          "ms": 5.598799999999997
+        },
+        {
+          "name": "(garbage collector)",
+          "ms": 3.187199999999999
+        },
+        {
+          "name": "effect/src/SchemaAST.ts",
+          "ms": 1.9228
+        },
+        {
+          "name": "node:internal/crypto/util",
+          "ms": 1.4649999999999999
+        },
+        {
+          "name": "effect/src/Schema.ts",
+          "ms": 1.4544000000000006
+        },
+        {
+          "name": "node:zlib",
+          "ms": 0.896
+        },
+        {
+          "name": "effect/src/internal/core.ts",
+          "ms": 0.7148
+        },
+        {
+          "name": "node:net",
+          "ms": 0.6903999999999999
+        },
+        {
+          "name": "node:internal/crypto/keys",
+          "ms": 0.486
+        },
+        {
+          "name": "node:internal/bootstrap/switches/is_main_thread",
+          "ms": 0.47459999999999997
+        },
+        {
+          "name": "node:internal/util",
+          "ms": 0.45500000000000007
+        },
+        {
+          "name": "(set TextDecoder)",
+          "ms": 0.3554
+        },
+        {
+          "name": "effect/src/Context.ts",
+          "ms": 0.3538
+        },
+        {
+          "name": "effect/src/internal/schema/interpreter.ts",
+          "ms": 0.3516
+        },
+        {
+          "name": "(compileFunction)",
+          "ms": 0.29460000000000003
+        },
+        {
+          "name": "effect/src/internal/schema/make.ts",
+          "ms": 0.29040000000000005
+        },
+        {
+          "name": "node:internal/streams/readable",
+          "ms": 0.2866
+        }
+      ],
+      "bundleBytesByCategory": {
+        "pipe / dual / predicates": 13592,
+        "Other": 205566,
+        "Effect runtime & Layer": 90797,
+        "Schema": 160375,
+        "Router (FindMyWay)": 23320,
+        "HttpApi definition": 48689,
+        "HttpApiBuilder": 19219,
+        "App code (generated API)": 37433,
+        "Harness": 1363
+      }
+    },
+    {
+      "size": "50x10",
+      "categoriesMs": {
+        "bootstrap": {
+          "Node bootstrap": 3.740999999999998
+        },
+        "eval": {
+          "Parse & compile bundle": 24.804600000000185,
+          "Node built-ins": 1.864800000000001,
+          "Module top-level (unmapped)": 5.192999999999993,
+          "Effect runtime & Layer": 2.2146,
+          "Other": 1.5572000000000006,
+          "Schema": 4.769999999999997,
+          "Node: undici init": 35.84740000000013,
+          "Garbage collector": 3.507,
+          "pipe / dual / predicates": 0.42260000000000003,
+          "V8 (program)": 0.16140000000000002,
+          "HttpApi definition": 0.16419999999999998
+        },
+        "define": {
+          "Module top-level (unmapped)": 6.052199999999997,
+          "HttpApi definition": 9.327600000000004,
+          "Schema": 18.341799999999992,
+          "Other": 5.4752,
+          "pipe / dual / predicates": 6.478200000000005,
+          "Garbage collector": 4.652400000000001,
+          "Node built-ins": 0.0318,
+          "Effect runtime & Layer": 0.0694
+        },
+        "layer": {
+          "Module top-level (unmapped)": 1.1765999999999999,
+          "Other": 0.12799999999999997,
+          "Effect runtime & Layer": 0.13240000000000002,
+          "pipe / dual / predicates": 0.032799999999999996,
+          "HttpApiBuilder": 0.0346
+        },
+        "handler": {
+          "Other": 2.4543999999999992,
+          "Effect runtime & Layer": 8.01960000000001,
+          "pipe / dual / predicates": 5.4476,
+          "HttpApiBuilder": 9.942599999999995,
+          "HttpApi definition": 1.9698000000000002,
+          "Schema": 8.139399999999997,
+          "Garbage collector": 4.577600000000001,
+          "Router (FindMyWay)": 15.165199999999976
+        },
+        "first": {
+          "Module top-level (unmapped)": 0.5614,
+          "Node: undici init": 4.543400000000004,
+          "Other": 1.4638000000000002,
+          "Effect runtime & Layer": 0.6844,
+          "Router (FindMyWay)": 0.1594,
+          "Schema": 2.072199999999999,
+          "HttpApiBuilder": 0.098,
+          "pipe / dual / predicates": 0.0644
+        },
+        "second": {
+          "Node: undici init": 0.5501999999999999,
+          "Schema": 0.065,
+          "HttpApiBuilder": 0.032600000000000004,
+          "Effect runtime & Layer": 0.069
+        },
+        "openapi": {
+          "Other": 24.180599999999927,
+          "HttpApi definition": 26.4336,
+          "Effect runtime & Layer": 1.1599999999999997,
+          "Schema": 28.7153999999999,
+          "Garbage collector": 18.96519999999997,
+          "pipe / dual / predicates": 1.7519999999999996,
+          "Module top-level (unmapped)": 0.058
+        }
+      },
+      "topFunctions": {
+        "bootstrap": [
+          {
+            "name": "decode node:internal/encoding",
+            "ms": 0.5077999999999999
+          },
+          {
+            "name": "(program) ((program))",
+            "ms": 0.41919999999999996
+          },
+          {
+            "name": "getCLIOptionsFromBinding node:internal/options",
+            "ms": 0.32459999999999994
+          },
+          {
+            "name": "normalizeString node:path",
+            "ms": 0.2304
+          },
+          {
+            "name": "getPathFromURLPosix node:internal/url",
+            "ms": 0.2062
+          },
+          {
+            "name": "patchProcessObject process/pre_execution",
+            "ms": 0.1946
+          },
+          {
+            "name": "evaluate (evaluate)",
+            "ms": 0.1636
+          },
+          {
+            "name": "getSourceSync esm/load",
+            "ms": 0.1192
+          },
+          {
+            "name": "isInt32 node:internal/validators",
+            "ms": 0.116
+          },
+          {
+            "name": "readFileSync node:fs",
+            "ms": 0.1146
+          },
+          {
+            "name": "createUnsafeBuffer node:internal/buffer",
+            "ms": 0.11259999999999999
+          },
+          {
+            "name": "read (read)",
+            "ms": 0.0878
+          },
+          {
+            "name": "finalizeResolution esm/resolve",
+            "ms": 0.06620000000000001
+          },
+          {
+            "name": "realpathSync node:fs",
+            "ms": 0.0654
+          },
+          {
+            "name": "initializeImportAttributes esm/assert",
+            "ms": 0.0648
+          }
+        ],
+        "eval": [
+          {
+            "name": "compileSourceTextModule esm/utils",
+            "ms": 24.804600000000185
+          },
+          {
+            "name": "compileForInternalLoader bootstrap/realm",
+            "ms": 12.457600000000001
+          },
+          {
+            "name": "__require undici/undici",
+            "ms": 8.529799999999994
+          },
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 5.192999999999993
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 3.507
+          },
+          {
+            "name": "internalBinding bootstrap/realm",
+            "ms": 1.3512000000000004
+          },
+          {
+            "name": "(anonymous) crypto/util",
+            "ms": 1.2963999999999998
+          },
+          {
+            "name": "(anonymous) internal/effect.ts:1510",
+            "ms": 1.0318
+          },
+          {
+            "name": "(anonymous) node:zlib",
+            "ms": 1.0028
+          },
+          {
+            "name": "lib/llhttp/constants.js undici/undici",
+            "ms": 0.6386
+          },
+          {
+            "name": "(anonymous) crypto/keys",
+            "ms": 0.4502
+          },
+          {
+            "name": "createWritableStdioStream switches/is_main_thread",
+            "ms": 0.4463999999999999
+          },
+          {
+            "name": "lib/web/webidl/index.js undici/undici",
+            "ms": 0.39659999999999995
+          },
+          {
+            "name": "makeClass src/Schema.ts:15863",
+            "ms": 0.36399999999999993
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.35100000000000003
+          }
+        ],
+        "define": [
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 6.052199999999997
+          },
+          {
+            "name": "defineApi generated/api-50x10.mjs:7",
+            "ms": 5.079800000000001
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 4.652400000000001
+          },
+          {
+            "name": "make$16 schema/make.ts:46",
+            "ms": 3.060199999999999
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1577",
+            "ms": 2.6527999999999996
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiEndpoint.ts:1048",
+            "ms": 1.2755999999999998
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1540",
+            "ms": 1.1987999999999999
+          },
+          {
+            "name": "struct src/SchemaAST.ts:3273",
+            "ms": 1.138
+          },
+          {
+            "name": "validateResponseExclusivity http-api/HttpApiEndpoint.ts:1328",
+            "ms": 1.0493999999999999
+          },
+          {
+            "name": "copy src/SchemaAST.ts:4341",
+            "ms": 0.8837999999999999
+          },
+          {
+            "name": "(anonymous) src/Predicate.ts:1420",
+            "ms": 0.8556000000000001
+          },
+          {
+            "name": "isFunction src/Predicate.ts:952",
+            "ms": 0.7786
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.7243999999999998
+          },
+          {
+            "name": "validateSuccessResponse http-api/HttpApiEndpoint.ts:1257",
+            "ms": 0.6906
+          },
+          {
+            "name": "add http-api/HttpApi.ts:147",
+            "ms": 0.6634000000000001
+          }
+        ],
+        "layer": [
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 1.1765999999999999
+          },
+          {
+            "name": "defineLayer generated/api-50x10.mjs:1465",
+            "ms": 0.09559999999999999
+          },
+          {
+            "name": "fromBuildUnsafe src/Layer.ts:315",
+            "ms": 0.0346
+          },
+          {
+            "name": "layer$1 http-api/HttpApiBuilder.ts:66",
+            "ms": 0.0346
+          },
+          {
+            "name": "defineFunctionLength internal/effect.ts:1266",
+            "ms": 0.033
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.032799999999999996
+          },
+          {
+            "name": "gen$1 internal/effect.ts:1222",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "mark scripts/harness.mjs:23",
+            "ms": 0.0324
+          },
+          {
+            "name": "fnUntraced$1 internal/effect.ts:1248",
+            "ms": 0.0322
+          }
+        ],
+        "handler": [
+          {
+            "name": "_on internal/router.ts:116",
+            "ms": 7.878400000000007
+          },
+          {
+            "name": "on internal/router.ts:72",
+            "ms": 4.707000000000004
+          },
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 4.577600000000001
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiBuilder.ts:146",
+            "ms": 4.520800000000002
+          },
+          {
+            "name": "copy src/SchemaAST.ts:4341",
+            "ms": 2.426000000000001
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1577",
+            "ms": 1.5834000000000001
+          },
+          {
+            "name": "(anonymous) src/Function.ts:1540",
+            "ms": 1.3756
+          },
+          {
+            "name": "handlerToHttpEffect http-api/HttpApiBuilder.ts:827",
+            "ms": 0.9669999999999997
+          },
+          {
+            "name": "(anonymous) src/Function.ts:251",
+            "ms": 0.9573999999999999
+          },
+          {
+            "name": "make$16 schema/make.ts:46",
+            "ms": 0.8552
+          },
+          {
+            "name": "handlerToRoute http-api/HttpApiBuilder.ts:921",
+            "ms": 0.8527999999999999
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:4792",
+            "ms": 0.8289999999999997
+          },
+          {
+            "name": "toRouterPath internal/path.ts:20",
+            "ms": 0.699
+          },
+          {
+            "name": "(anonymous) src/Predicate.ts:1420",
+            "ms": 0.6220000000000001
+          },
+          {
+            "name": "makePrimitiveProto internal/effect.ts:1419",
+            "ms": 0.5594000000000001
+          }
+        ],
+        "first": [
+          {
+            "name": "(anonymous) (bundle):1",
+            "ms": 0.5614
+          },
+          {
+            "name": "_Request undici/undici",
+            "ms": 0.5142
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.4144000000000001
+          },
+          {
+            "name": "(anonymous) undici/undici",
+            "ms": 0.3584
+          },
+          {
+            "name": "compile schema/interpreter.ts:120",
+            "ms": 0.3566000000000001
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3757",
+            "ms": 0.34940000000000004
+          },
+          {
+            "name": "(anonymous) http/HttpRouter.ts:212",
+            "ms": 0.32959999999999995
+          },
+          {
+            "name": "makeRequest undici/undici",
+            "ms": 0.21760000000000002
+          },
+          {
+            "name": "readableByteStreamControllerEnqueue webstreams/readablestream",
+            "ms": 0.166
+          },
+          {
+            "name": "(anonymous) http/HttpEffect.ts:347",
+            "ms": 0.16340000000000002
+          },
+          {
+            "name": "(anonymous) schema/interpreter.ts:208",
+            "ms": 0.1628
+          },
+          {
+            "name": "makePrimitive internal/core.ts:643",
+            "ms": 0.16260000000000002
+          },
+          {
+            "name": "webidl.converters.HeadersInit undici/undici",
+            "ms": 0.16219999999999998
+          },
+          {
+            "name": "setupReadableByteStreamControllerFromSource webstreams/readablestream",
+            "ms": 0.16219999999999998
+          },
+          {
+            "name": "enqueue webstreams/readablestream",
+            "ms": 0.1618
+          }
+        ],
+        "second": [
+          {
+            "name": "webidl.util.Type undici/undici",
+            "ms": 0.0978
+          },
+          {
+            "name": "setURLContextFromBinding node:internal/url",
+            "ms": 0.06620000000000001
+          },
+          {
+            "name": "makeRequest undici/undici",
+            "ms": 0.0648
+          },
+          {
+            "name": "lookup src/Context.ts:697",
+            "ms": 0.0346
+          },
+          {
+            "name": "applyOverlays src/Context.ts:674",
+            "ms": 0.0344
+          },
+          {
+            "name": "(anonymous) http-api/HttpApiBuilder.ts:858",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "_HeadersList undici/undici",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "(anonymous) schema/interpreter.ts:208",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "readableByteStreamControllerEnqueueChunkToQueue webstreams/readablestream",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "setupReadableByteStreamController webstreams/readablestream",
+            "ms": 0.032600000000000004
+          },
+          {
+            "name": "(anonymous) src/SchemaAST.ts:3120",
+            "ms": 0.0324
+          },
+          {
+            "name": "getHeadersList undici/undici",
+            "ms": 0.0324
+          },
+          {
+            "name": "readAllBytes undici/undici",
+            "ms": 0.0324
+          },
+          {
+            "name": "DefaultReadRequest webstreams/readablestream",
+            "ms": 0.0324
+          },
+          {
+            "name": "_Response undici/undici",
+            "ms": 0.032
+          }
+        ],
+        "openapi": [
+          {
+            "name": "(garbage collector) (garbage collector)",
+            "ms": 18.96519999999997
+          },
+          {
+            "name": "cloneOpenAPISpec http-api/OpenApi.ts:238",
+            "ms": 6.379399999999992
+          },
+          {
+            "name": "walk src/JsonSchema.ts:714",
+            "ms": 5.9170000000000025
+          },
+          {
+            "name": "recur schema/toJsonSchemaDocument.ts:374",
+            "ms": 5.416200000000004
+          },
+          {
+            "name": "assignProperty internal/record.ts:2",
+            "ms": 5.220000000000002
+          },
+          {
+            "name": "on schema/toJsonSchemaDocument.ts:405",
+            "ms": 3.5364
+          },
+          {
+            "name": "onEndpoint http-api/OpenApi.ts:409",
+            "ms": 3.005000000000001
+          },
+          {
+            "name": "getCandidate schema/toRepresentation.ts:112",
+            "ms": 2.2863999999999995
+          },
+          {
+            "name": "selectReferences http-api/OpenApi.ts:763",
+            "ms": 2.1558000000000006
+          },
+          {
+            "name": "compileSchemaOps http-api/OpenApi.ts:679",
+            "ms": 2.1494
+          },
+          {
+            "name": "rejectKeywordCollisions src/JsonSchema.ts:1159",
+            "ms": 1.7571999999999994
+          },
+          {
+            "name": "on schema/toRepresentation.ts:190",
+            "ms": 1.7538000000000002
+          },
+          {
+            "name": "appendJsonSchema schema/toJsonSchemaDocument.ts:159",
+            "ms": 1.5368
+          },
+          {
+            "name": "decodeUriFragment src/JsonPointer.ts:91",
+            "ms": 1.4971999999999996
+          },
+          {
+            "name": "visit schema/toRepresentation.ts:141",
+            "ms": 1.3765999999999998
+          }
+        ]
+      },
+      "evalFiles": [
+        {
+          "name": "node:internal/modules/esm/utils",
+          "ms": 24.804600000000185
+        },
+        {
+          "name": "node:internal/bootstrap/realm",
+          "ms": 13.9636
+        },
+        {
+          "name": "node:internal/deps/undici/undici",
+          "ms": 13.752799999999995
+        },
+        {
+          "name": "(bundle)",
+          "ms": 5.192999999999993
+        },
+        {
+          "name": "(garbage collector)",
+          "ms": 3.507
+        },
+        {
+          "name": "effect/src/SchemaAST.ts",
+          "ms": 1.753800000000001
+        },
+        {
+          "name": "node:internal/crypto/util",
+          "ms": 1.6428000000000005
+        },
+        {
+          "name": "effect/src/Schema.ts",
+          "ms": 1.4762
+        },
+        {
+          "name": "effect/src/internal/effect.ts",
+          "ms": 1.3212000000000004
+        },
+        {
+          "name": "node:zlib",
+          "ms": 1.0348
+        },
+        {
+          "name": "effect/src/internal/core.ts",
+          "ms": 0.5992000000000001
+        },
+        {
+          "name": "node:internal/crypto/keys",
+          "ms": 0.48240000000000005
+        },
+        {
+          "name": "node:net",
+          "ms": 0.4746
+        },
+        {
+          "name": "node:internal/bootstrap/switches/is_main_thread",
+          "ms": 0.4463999999999999
+        },
+        {
+          "name": "effect/src/internal/schema/make.ts",
+          "ms": 0.4438
+        },
+        {
+          "name": "effect/src/internal/schema/interpreter.ts",
+          "ms": 0.3534
+        },
+        {
+          "name": "node:internal/webstreams/writablestream",
+          "ms": 0.29259999999999997
+        },
+        {
+          "name": "(compileFunction)",
+          "ms": 0.29119999999999996
+        },
+        {
+          "name": "node:internal/streams/duplex",
+          "ms": 0.29040000000000005
+        },
+        {
+          "name": "effect/src/SchemaParser.ts",
+          "ms": 0.2888
+        }
+      ],
+      "bundleBytesByCategory": {
+        "pipe / dual / predicates": 13592,
+        "Other": 205566,
+        "Effect runtime & Layer": 90797,
+        "Schema": 160375,
+        "Router (FindMyWay)": 23320,
+        "HttpApi definition": 48689,
+        "HttpApiBuilder": 19219,
+        "App code (generated API)": 184873,
+        "Harness": 1363
+      }
+    }
+  ]
+}

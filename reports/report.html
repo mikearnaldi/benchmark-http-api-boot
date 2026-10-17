@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Effect HttpApi cold-start report</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,0.10);
+  --neutral: #b5b4ac;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7; --s8: #e34948;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink-2: #c3c2b7; --ink-3: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+    --neutral: #5c5b56;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--background, var(--page));
+  color: var(--foreground, var(--ink));
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main { max-width: 960px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { font-size: 28px; line-height: 1.2; margin: 0 0 6px; font-weight: 650; }
+h2 { font-size: 20px; margin: 44px 0 6px; font-weight: 650; }
+h3 { font-size: 15px; margin: 24px 0 6px; font-weight: 650; }
+p { margin: 8px 0; color: var(--ink-2); }
+p b, li b { color: var(--ink); font-weight: 600; }
+ul, ol { color: var(--ink-2); padding-left: 20px; }
+li { margin: 6px 0; }
+code { font: 12.5px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--ring); padding: 1px 4px; border-radius: 4px; color: var(--ink); }
+.sub { color: var(--ink-3); font-size: 13px; }
+.muted { color: var(--ink-3); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0 8px; }
+.tile { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 16px; }
+.tile .label { font-size: 13px; color: var(--ink-2); }
+.tile .value { font-size: 30px; font-weight: 650; margin: 4px 0 2px; color: var(--ink); }
+.tile .value small { font-size: 15px; font-weight: 500; color: var(--ink-2); }
+.tile .note { font-size: 12.5px; color: var(--ink-3); }
+.card { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 18px 18px 10px; margin: 14px 0; }
+.card h4 { margin: 0 0 2px; font-size: 14px; font-weight: 600; color: var(--ink); }
+.card .caption { font-size: 12.5px; color: var(--ink-3); margin: 0 0 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--ink-2); margin: 4px 0 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.chart svg { display: block; width: 100%; overflow: visible; }
+.chart text { font-size: 11.5px; fill: var(--ink-3); font-variant-numeric: tabular-nums; }
+.chart text.lbl { fill: var(--ink-2); font-size: 12px; }
+.chart text.val { fill: var(--ink); font-size: 12px; font-weight: 600; }
+details { margin: 6px 0 4px; }
+summary { cursor: pointer; font-size: 12.5px; color: var(--ink-3); padding: 4px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 8px 0 12px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+th { font-weight: 600; color: var(--ink-2); font-size: 12px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.callout { border-left: 3px solid var(--s1); background: var(--surface); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 14px 0; }
+.callout p { margin: 4px 0; }
+.tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--ring); box-shadow: 0 4px 16px rgba(0,0,0,.12); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; line-height: 1.45; opacity: 0; transition: opacity .08s; z-index: 10; max-width: 300px; }
+.tip .k { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+.tip .row { display: flex; justify-content: space-between; gap: 14px; }
+.tip .row span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 720px) { .cols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Effect HttpApi cold-start report</h1>
+<p class="sub">effect npm 4.0.5 · node v24.21.0 · linux 6.18.54 · Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz (8 cores) · rolldown 1.2.14 · 30 fresh processes per size · 5 CPU profiles per size · Sat, 17 Oct 2026 08:50:49 GMT</p>
+
+<p>How long does an <code>effect/http-api</code> server take to go from a brand-new process to its first response, and how does that grow with the number of endpoints? Each sample is a fresh <code>node</code> process running a single rolldown bundle (the way a Cloudflare Worker ships), with APIs of <b>1, 10, 50, 100, 500</b> endpoints.</p>
+
+<div class="tiles">
+  <div class="tile"><div class="label">Ready at 500 endpoints</div><div class="value">180 <small>ms</small></div><div class="note">process start → first response; p95 186 ms</div></div>
+  <div class="tile"><div class="label">Cost per endpoint</div><div class="value">148 <small>µs</small></div><div class="note">define + build + first request, linear fit R² 0.996</div></div>
+  <div class="tile"><div class="label">Fixed module load</div><div class="value">59 <small>ms</small></div><div class="note">31 ms is Node initializing undici; ~29 ms is parsing + running Effect</div></div>
+  <div class="tile"><div class="label">OpenAPI spec at 500 endpoints</div><div class="value">87 <small>ms</small></div><div class="note">158 µs/endpoint, but only when docs are first requested</div></div>
+</div>
+
+<div class="callout">
+<p><b>Summary.</b> Startup is a fixed ~101 ms (27 ms Node bootstrap + 59 ms module load + ~15 ms to build and serve) plus a <b>linear ~148 µs per endpoint</b>, split almost evenly between <b>defining the API</b> (71 µs, mostly Schema construction) and <b>building the handler</b> (77 µs, router registration + per-endpoint codecs). At 500 endpoints, API work overtakes module load: 84 ms vs 61 ms. The first request costs a flat ~7.7 ms regardless of size because everything is built eagerly in <code>toWebHandler</code>.</p>
+</div>
+
+<h2>1 · Where the time goes</h2>
+<p>Medians per phase, stacked in execution order. <b>Module load</b> is parse/compile + evaluation of the bundle (measured as time-to-first-harness-line minus an empty Node process). <b>Define API</b> is <code>HttpApi.make(…).add(…)</code> including all schemas. <b>Build handler</b> is <code>HttpApiBuilder.group/layer</code> + <code>HttpRouter.toWebHandler</code>, which builds the layer, every route and the router tree. <b>First request</b> is one <code>GET /r0/1</code>.</p>
+<div class="card"><h4>Process start → first response</h4><p class="caption">median ms per phase · hover for values</p><div class="chart" data-chart="waterfall"></div><details><summary>Table view</summary><table><thead><tr><th>Endpoints</th><th class="num">Node bootstrap</th><th class="num">Module load</th><th class="num">Define API</th><th class="num">Build handler</th><th class="num">First request</th><th class="num">Ready (p50)</th><th class="num">Ready (p95)</th></tr></thead><tbody><tr><td>1</td><td class="num">26.5</td><td class="num">59.2</td><td class="num">2.4</td><td class="num">5.6</td><td class="num">7.5</td><td class="num"><b>101.4</b></td><td class="num">104.8</td></tr><tr><td>10</td><td class="num">26.5</td><td class="num">59.1</td><td class="num">3.8</td><td class="num">7.8</td><td class="num">7.4</td><td class="num"><b>104.7</b></td><td class="num">107.5</td></tr><tr><td>50</td><td class="num">26.5</td><td class="num">59.2</td><td class="num">8.3</td><td class="num">11.8</td><td class="num">7.4</td><td class="num"><b>113.0</b></td><td class="num">119.8</td></tr><tr><td>100</td><td class="num">26.5</td><td class="num">59.8</td><td class="num">13.0</td><td class="num">13.8</td><td class="num">7.5</td><td class="num"><b>120.9</b></td><td class="num">124.4</td></tr><tr><td>500</td><td class="num">26.5</td><td class="num">60.9</td><td class="num">38.9</td><td class="num">45.3</td><td class="num">7.7</td><td class="num"><b>179.6</b></td><td class="num">186.4</td></tr></tbody></table></details></div>
+<p>At 1 endpoint 85% of the time is fixed (Node + module load). At 500 endpoints the API-dependent phases are 47% of the total. Whole-process CPU is 463 ms against 180 ms wall time at 500 endpoints: V8's concurrent GC and compiler threads add CPU beyond the main thread, which matters for platforms that bill or cap all CPU.</p>
+
+<h2>2 · How it grows</h2>
+<p>Every API-dependent phase grows <b>linearly</b> with endpoint count (R² ≥ 0.991), with no super-linear term up to 500 endpoints. The cost per endpoint does <b>fall at small sizes</b> before settling: the first endpoints cost 398 µs each, while from 50 endpoints on it's ~143 µs. That pattern fits V8 running the definition and build code cold (interpreted, unoptimized) at first and optimizing it once it gets hot. Module load barely moves (+3.5 µs/endpoint, from parsing the generated API code), and the first request is flat.</p>
+<div class="card"><h4>Phase time vs endpoint count</h4><p class="caption">median ms · linear x axis · hover for values</p><div class="chart" data-chart="growth"></div><details><summary>Table view</summary><table><thead><tr><th>Endpoints</th><th class="num">Module load</th><th class="num">Define API</th><th class="num">Build handler</th><th class="num">First request</th><th class="num">OpenAPI spec</th><th class="num">2nd request</th></tr></thead><tbody><tr><td>1</td><td class="num">59.2</td><td class="num">2.4</td><td class="num">5.6</td><td class="num">7.5</td><td class="num">6.1</td><td class="num">0.7</td></tr><tr><td>10</td><td class="num">59.1</td><td class="num">3.8</td><td class="num">7.8</td><td class="num">7.4</td><td class="num">10.1</td><td class="num">0.6</td></tr><tr><td>50</td><td class="num">59.2</td><td class="num">8.3</td><td class="num">11.8</td><td class="num">7.4</td><td class="num">17.2</td><td class="num">0.6</td></tr><tr><td>100</td><td class="num">59.8</td><td class="num">13.0</td><td class="num">13.8</td><td class="num">7.5</td><td class="num">25.3</td><td class="num">0.6</td></tr><tr><td>500</td><td class="num">60.9</td><td class="num">38.9</td><td class="num">45.3</td><td class="num">7.7</td><td class="num">86.6</td><td class="num">0.6</td></tr></tbody></table></details></div>
+<div class="cols">
+<div><h3>Linear fit per phase</h3><table><thead><tr><th>Phase</th><th class="num">Cost per endpoint</th><th class="num">Fixed cost (intercept)</th><th class="num">R² (linear fit)</th></tr></thead><tbody><tr><td>Define API</td><td class="num">70.9 µs</td><td class="num">3.9 ms</td><td class="num">0.9908</td></tr><tr><td>Build handler</td><td class="num">77.4 µs</td><td class="num">6.6 ms</td><td class="num">0.9969</td></tr><tr><td>First request</td><td class="num">0.6 µs</td><td class="num">7.5 ms</td><td class="num">0.8152</td></tr><tr><td>Module load</td><td class="num">3.5 µs</td><td class="num">59.2 ms</td><td class="num">0.9403</td></tr><tr><td><b>Init → first response</b></td><td class="num">148.2 µs</td><td class="num">18.1 ms</td><td class="num">0.9957</td></tr><tr><td>OpenAPI spec (on demand)</td><td class="num">157.5 µs</td><td class="num">8.2 ms</td><td class="num">0.9981</td></tr><tr><td>Heap used</td><td class="num">32.1 KB</td><td class="num">11.6 MB</td><td class="num">0.9683</td></tr><tr><td>Bundle size (unminified)</td><td class="num">0.4 KB</td><td class="num">550.7 KB</td><td class="num">1.0000</td></tr></tbody></table></div>
+<div><h3>Marginal cost between sizes</h3><p>Per-endpoint cost between consecutive sizes. It is higher for the first endpoints, while code is still running cold, and flat from 50 endpoints on.</p><table><thead><tr><th>Step</th><th class="num">Define µs/ep</th><th class="num">Build µs/ep</th><th class="num">Define + build µs/ep</th><th class="num">OpenAPI µs/ep</th></tr></thead><tbody><tr><td>1 → 10</td><td class="num">155</td><td class="num">244</td><td class="num">398</td><td class="num">440</td></tr><tr><td>10 → 50</td><td class="num">114</td><td class="num">100</td><td class="num">214</td><td class="num">179</td></tr><tr><td>50 → 100</td><td class="num">93</td><td class="num">42</td><td class="num">135</td><td class="num">162</td></tr><tr><td>100 → 500</td><td class="num">65</td><td class="num">79</td><td class="num">143</td><td class="num">153</td></tr></tbody></table></div>
+</div>
+
+<h2>3 · What the per-endpoint cost is made of</h2>
+<p>CPU profiles (5 per size, 100 µs sampling) are split by phase using monotonic timestamps from the harness, then each sample is attributed to an Effect source file through the bundle sourcemap and grouped. Category times are the profile's shares scaled to the un-profiled medians, and the per-endpoint figure is the linear-fit slope of each category across the five sizes.</p>
+<div class="card"><h4>Per-endpoint cost by category</h4><p class="caption">µs per additional endpoint · hover for values</p><div class="chart" data-chart="perEndpoint"></div><details><summary>Table view</summary><table><thead><tr><th>Category</th><th class="num">Define API</th><th class="num">Build handler</th><th class="num">OpenAPI spec</th></tr></thead><tbody><tr><td>Router (FindMyWay)</td><td class="num">0.0</td><td class="num">22.9</td><td class="num">0.0</td></tr><tr><td>HttpApiBuilder</td><td class="num">0.0</td><td class="num">13.4</td><td class="num">0.0</td></tr><tr><td>HttpApi definition</td><td class="num">12.2</td><td class="num">2.9</td><td class="num">39.7</td></tr><tr><td>Schema</td><td class="num">24.8</td><td class="num">11.8</td><td class="num">42.6</td></tr><tr><td>Effect runtime & Layer</td><td class="num">0.1</td><td class="num">7.2</td><td class="num">2.0</td></tr><tr><td>pipe / dual / predicates</td><td class="num">9.6</td><td class="num">8.1</td><td class="num">3.0</td></tr><tr><td>Garbage collector</td><td class="num">7.3</td><td class="num">7.1</td><td class="num">32.1</td></tr><tr><td>Other</td><td class="num">16.9</td><td class="num">4.0</td><td class="num">38.1</td></tr><tr><td><b>Total</b></td><td class="num"><b>70.9</b></td><td class="num"><b>77.4</b></td><td class="num"><b>157.5</b></td></tr></tbody></table></details></div>
+<ul>
+<li><b>Define API (71 µs/ep).</b> Dominated by <b>Schema</b> (25 µs): every endpoint builds new struct/param/payload/error ASTs (<code>schema/make.ts</code>, <code>SchemaAST.struct</code>), plus <b>HttpApi definition</b> bookkeeping (12 µs), including <code>validateResponseExclusivity</code> run for every endpoint, and <code>pipe</code>/<code>dual</code> overhead (10 µs).</li>
+<li><b>Build handler (77 µs/ep).</b> The single biggest category is the <b>router</b> (23 µs/ep, 27% of this phase at 500 endpoints vs 10% at 1): <code>FindMyWay</code>'s <code>_on</code> does string slicing, <code>toLowerCase</code> and <code>split/join</code> per route segment. Next are <b>HttpApiBuilder</b> (13 µs: <code>handlerToRoute</code>, per-endpoint encoders and decoders), the <b>Effect runtime/Layer</b> work that runs it (7 µs), and <b>Schema</b> codec derivation (12 µs: <code>SchemaAST.copy</code>, <code>make</code>).</li>
+<li><b>GC</b> is 14 µs/ep across define + build: these phases allocate a lot of short-lived AST/closure objects. Heap used grows ~32 KB per endpoint.</li>
+</ul>
+<div class="cols">
+<div class="card"><h4>Build handler, by size</h4><p class="caption">ms (scaled) · router share grows with size</p><div class="chart" data-chart="buildMix"></div><details><summary>Table view</summary><table><thead><tr><th>Category</th><th class="num">1 ep</th><th class="num">10 ep</th><th class="num">50 ep</th><th class="num">100 ep</th><th class="num">500 ep</th><th class="num">µs / endpoint</th></tr></thead><tbody><tr><td>Router (FindMyWay)</td><td class="num">0.6</td><td class="num">1.2</td><td class="num">1.4</td><td class="num">2.4</td><td class="num">12.0</td><td class="num">22.9</td></tr><tr><td>HttpApiBuilder</td><td class="num">0.7</td><td class="num">1.8</td><td class="num">1.8</td><td class="num">2.8</td><td class="num">7.9</td><td class="num">13.4</td></tr><tr><td>HttpApi definition</td><td class="num">0.0</td><td class="num">0.2</td><td class="num">0.3</td><td class="num">0.5</td><td class="num">1.6</td><td class="num">2.9</td></tr><tr><td>Schema</td><td class="num">0.4</td><td class="num">0.4</td><td class="num">1.8</td><td class="num">1.9</td><td class="num">6.4</td><td class="num">11.8</td></tr><tr><td>Effect runtime & Layer</td><td class="num">2.8</td><td class="num">2.6</td><td class="num">3.5</td><td class="num">4.1</td><td class="num">6.4</td><td class="num">7.2</td></tr><tr><td>pipe / dual / predicates</td><td class="num">0.3</td><td class="num">0.6</td><td class="num">0.6</td><td class="num">0.8</td><td class="num">4.3</td><td class="num">8.1</td></tr><tr><td>Garbage collector</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">1.1</td><td class="num">0.0</td><td class="num">3.6</td><td class="num">7.1</td></tr><tr><td>Other</td><td class="num">0.9</td><td class="num">1.0</td><td class="num">1.4</td><td class="num">1.3</td><td class="num">3.0</td><td class="num">4.0</td></tr></tbody></table></details></div>
+<div class="card"><h4>Define API, by size</h4><p class="caption">ms (scaled) · Schema dominates throughout</p><div class="chart" data-chart="defineMix"></div><details><summary>Table view</summary><table><thead><tr><th>Category</th><th class="num">1 ep</th><th class="num">10 ep</th><th class="num">50 ep</th><th class="num">100 ep</th><th class="num">500 ep</th><th class="num">µs / endpoint</th></tr></thead><tbody><tr><td>Router (FindMyWay)</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td></tr><tr><td>HttpApiBuilder</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td></tr><tr><td>HttpApi definition</td><td class="num">0.8</td><td class="num">1.2</td><td class="num">2.1</td><td class="num">2.6</td><td class="num">7.2</td><td class="num">12.2</td></tr><tr><td>Schema</td><td class="num">1.0</td><td class="num">1.7</td><td class="num">3.8</td><td class="num">5.9</td><td class="num">14.2</td><td class="num">24.8</td></tr><tr><td>Effect runtime & Layer</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.1</td><td class="num">0.0</td><td class="num">0.1</td><td class="num">0.1</td></tr><tr><td>pipe / dual / predicates</td><td class="num">0.1</td><td class="num">0.2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">5.0</td><td class="num">9.6</td></tr><tr><td>Garbage collector</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">0.0</td><td class="num">1.2</td><td class="num">3.6</td><td class="num">7.3</td></tr><tr><td>Other</td><td class="num">0.4</td><td class="num">0.6</td><td class="num">1.3</td><td class="num">2.3</td><td class="num">8.9</td><td class="num">16.9</td></tr></tbody></table></details></div>
+</div>
+<h3>Hottest functions at 500 endpoints</h3>
+<p class="sub">Self time from the profiler (inflated by sampling overhead; compare relatively). <code>(bundle):1</code> is code without a source mapping.</p>
+<div class="cols">
+<div><details><summary>Define API: top functions</summary><table><thead><tr><th>Function (source)</th><th class="num">ms (profiled, 500 ep)</th></tr></thead><tbody><tr><td><code>(anonymous) (bundle):1</code></td><td class="num">6.1</td></tr><tr><td><code>defineApi generated/api-50x10.mjs:7</code></td><td class="num">5.1</td></tr><tr><td><code>(garbage collector) (garbage collector)</code></td><td class="num">4.7</td></tr><tr><td><code>make$16 schema/make.ts:46</code></td><td class="num">3.1</td></tr><tr><td><code>(anonymous) src/Function.ts:1577</code></td><td class="num">2.7</td></tr><tr><td><code>(anonymous) http-api/HttpApiEndpoint.ts:1048</code></td><td class="num">1.3</td></tr><tr><td><code>(anonymous) src/Function.ts:1540</code></td><td class="num">1.2</td></tr><tr><td><code>struct src/SchemaAST.ts:3273</code></td><td class="num">1.1</td></tr><tr><td><code>validateResponseExclusivity http-api/HttpApiEndpoint.ts:1328</code></td><td class="num">1.0</td></tr><tr><td><code>copy src/SchemaAST.ts:4341</code></td><td class="num">0.9</td></tr></tbody></table></details></div>
+<div><details><summary>Build handler: top functions</summary><table><thead><tr><th>Function (source)</th><th class="num">ms (profiled, 500 ep)</th></tr></thead><tbody><tr><td><code>_on internal/router.ts:116</code></td><td class="num">7.9</td></tr><tr><td><code>on internal/router.ts:72</code></td><td class="num">4.7</td></tr><tr><td><code>(garbage collector) (garbage collector)</code></td><td class="num">4.6</td></tr><tr><td><code>(anonymous) http-api/HttpApiBuilder.ts:146</code></td><td class="num">4.5</td></tr><tr><td><code>copy src/SchemaAST.ts:4341</code></td><td class="num">2.4</td></tr><tr><td><code>(anonymous) src/Function.ts:1577</code></td><td class="num">1.6</td></tr><tr><td><code>(anonymous) src/Function.ts:1540</code></td><td class="num">1.4</td></tr><tr><td><code>(anonymous) (bundle):1</code></td><td class="num">1.2</td></tr><tr><td><code>(anonymous) src/Function.ts:251</code></td><td class="num">1.0</td></tr><tr><td><code>handlerToHttpEffect http-api/HttpApiBuilder.ts:827</code></td><td class="num">1.0</td></tr></tbody></table></details></div>
+</div>
+
+<h2>4 · Module load: the fixed cost</h2>
+<p>Module load takes ~59 ms at every size. Profiling shows Effect's own top-level code is only a small part of it:</p>
+<div class="card"><h4>Inside module load</h4><p class="caption">ms, profile shares scaled to the measured median, averaged over all sizes</p><div class="chart" data-chart="evalMix"></div><details><summary>Table view</summary><table><thead><tr><th>Component</th><th class="num">ms (scaled)</th><th class="num">share</th><th class="num">ms (raw profile)</th></tr></thead><tbody><tr><td>Node: undici init</td><td class="num">27.8</td><td class="num">47%</td><td class="num">36.3</td></tr><tr><td>Parse & compile bundle</td><td class="num">17.5</td><td class="num">30%</td><td class="num">22.8</td></tr><tr><td>Effect module top-level code</td><td class="num">10.2</td><td class="num">17%</td><td class="num">13.4</td></tr><tr><td>Garbage collector</td><td class="num">2.5</td><td class="num">4%</td><td class="num">3.3</td></tr><tr><td>Other Node / V8</td><td class="num">1.5</td><td class="num">3%</td><td class="num">2.0</td></tr></tbody></table></details></div>
+<ul>
+<li><b>Node initializing undici (~47%).</b> <code>Schema.ts</code> builds <code>instanceOf(globalThis.FormData)</code> at module scope. In Node, <code>FormData</code>/<code>Request</code>/<code>Headers</code> are lazy getters, and the first touch loads undici and its dependencies (crypto, zlib, streams): 32 ms even in an empty process.</li>
+<li><b>Parsing & compiling the bundle (~30%).</b> Proportional to bundle size: minifying (219 KB vs 552 KB) cuts module load from 59 to 47 ms.</li>
+<li><b>Effect's module top-level code</b> (creating services, tags, schema singletons) is ~10 ms.</li>
+</ul>
+<div class="card"><h4>A/B: removing the one module-scope <code>globalThis.FormData</code> reference</h4><p class="caption">10x10 API, median of 25 runs · the cost moves, it doesn't vanish, because the harness itself calls <code>new Request()</code></p><div class="chart" data-chart="experiment"></div><details><summary>Table view</summary><table><thead><tr><th>Variant</th><th class="num">Module load</th><th class="num">Define</th><th class="num">Build</th><th class="num">First request</th><th class="num">Total</th></tr></thead><tbody><tr><td>As shipped</td><td class="num">60.0</td><td class="num">13.0</td><td class="num">13.4</td><td class="num">7.5</td><td class="num">121.7</td></tr><tr><td>FormData ref removed</td><td class="num">29.5</td><td class="num">15.9</td><td class="num">14.4</td><td class="num">34.6</td><td class="num">122.2</td></tr></tbody></table></details></div>
+<p>Patching out that single reference drops module load from 60 to <b>29 ms</b>; the same ~31 ms then shows up in the first request (7.5 → 34.6 ms) because the harness builds a <code>Request</code>. Total is unchanged <i>on Node with web handlers</i>. It matters elsewhere: <b>on workerd</b> these globals are native, so Effect's real load cost there is closer to 29 ms than 60; and a <b>Node server using <code>node:http</code></b> (e.g. <code>NodeHttpServer</code>) never needs undici, so for it the reference is ~31 ms of pure waste.</p>
+
+<h2>5 · Bundle size</h2>
+<p>The unminified bundle starts at 552 KB and grows ~0.4 KB per endpoint, which is just the generated API code. Effect's share is the same at every size: HttpApi always pulls in Schema, the HTTP server stack (request/response, headers, cookies, multipart parsing), streams and the router, whether the API uses them or not.</p>
+<div class="card"><h4>Bundle composition</h4><p class="caption">KB of output per source category (unminified)</p><div class="chart" data-chart="bundle"></div><details><summary>Table view</summary><table><thead><tr><th>Category</th><th class="num">1 ep</th><th class="num">500 ep</th></tr></thead><tbody><tr><td>Router (FindMyWay)</td><td class="num">22.8</td><td class="num">22.8</td></tr><tr><td>HttpApi (definition + builder)</td><td class="num">66.2</td><td class="num">66.3</td></tr><tr><td>Schema</td><td class="num">156.6</td><td class="num">156.6</td></tr><tr><td>HTTP stack (effect/http)</td><td class="num">100.8</td><td class="num">100.8</td></tr><tr><td>Stream / Channel</td><td class="num">20.1</td><td class="num">20.1</td></tr><tr><td>Effect runtime & Layer</td><td class="num">89.1</td><td class="num">89.1</td></tr><tr><td>Other Effect modules</td><td class="num">92.7</td><td class="num">92.7</td></tr><tr><td>App code + harness</td><td class="num">3.2</td><td class="num">181.9</td></tr></tbody></table></details></div>
+<details><summary>Minified vs unminified</summary><table><thead><tr><th>Endpoints</th><th class="num">Unminified KB</th><th class="num">Minified KB</th><th class="num">Module load (unmin)</th><th class="num">Module load (min)</th></tr></thead><tbody><tr><td>1</td><td class="num">552</td><td class="num">219</td><td class="num">59.2</td><td class="num">47.2</td></tr><tr><td>10</td><td class="num">554</td><td class="num">221</td><td class="num">59.1</td><td class="num">46.6</td></tr><tr><td>50</td><td class="num">568</td><td class="num">228</td><td class="num">59.2</td><td class="num">47.1</td></tr><tr><td>100</td><td class="num">586</td><td class="num">237</td><td class="num">59.8</td><td class="num">47.3</td></tr><tr><td>500</td><td class="num">730</td><td class="num">312</td><td class="num">60.9</td><td class="num">48.6</td></tr></tbody></table></details>
+
+<h2>6 · OpenAPI generation</h2>
+<p><code>OpenApi.fromApi</code> is the most expensive per-endpoint operation measured: <b>158 µs/endpoint</b>, 87 ms at 500 endpoints, with GC as its largest category (32 µs/ep). Hot spots: JSON-schema document recursion (<code>toJsonSchemaDocument</code>), <code>cloneOpenAPISpec</code> and <code>assignProperty</code>. It is <b>not</b> part of cold start: <code>HttpApiScalar</code>, <code>HttpApiSwagger</code> and <code>openapiPath</code> all memoize it on first request. Whoever first opens <code>/docs</code> on a fresh isolate pays it, though.</p>
+<details><summary>OpenAPI: top functions</summary><table><thead><tr><th>Function (source)</th><th class="num">ms (profiled, 500 ep)</th></tr></thead><tbody><tr><td><code>(garbage collector) (garbage collector)</code></td><td class="num">19.0</td></tr><tr><td><code>cloneOpenAPISpec http-api/OpenApi.ts:238</code></td><td class="num">6.4</td></tr><tr><td><code>walk src/JsonSchema.ts:714</code></td><td class="num">5.9</td></tr><tr><td><code>recur schema/toJsonSchemaDocument.ts:374</code></td><td class="num">5.4</td></tr><tr><td><code>assignProperty internal/record.ts:2</code></td><td class="num">5.2</td></tr><tr><td><code>on schema/toJsonSchemaDocument.ts:405</code></td><td class="num">3.5</td></tr><tr><td><code>onEndpoint http-api/OpenApi.ts:409</code></td><td class="num">3.0</td></tr><tr><td><code>getCandidate schema/toRepresentation.ts:112</code></td><td class="num">2.3</td></tr><tr><td><code>selectReferences http-api/OpenApi.ts:763</code></td><td class="num">2.2</td></tr><tr><td><code>compileSchemaOps http-api/OpenApi.ts:679</code></td><td class="num">2.1</td></tr></tbody></table></details>
+
+<h2>7 · Leads for reducing cold start</h2>
+<ol>
+<li><b>Defer route compilation.</b> Build handler cost is per endpoint and paid upfront. Compiling each route's codecs (<code>handlerToRoute</code>, <code>SchemaAST.copy</code>/<code>make</code>) on its first hit would make cold start pay only for the routes actually used: about 32 of the 77 µs/ep.</li>
+<li><b>Cheaper route registration.</b> <code>FindMyWay._on</code>/<code>on</code> is the top self-time function in the build phase. Per-segment <code>split("::").join(":")</code>, <code>split("%").join("%25")</code> and <code>toLowerCase</code> could be skipped for segments without those characters, or the tree could be built lazily on first lookup.</li>
+<li><b>Lighter API definitions.</b> Schema construction dominates <code>define</code>. Reusing schema instances across endpoints helps users; on the library side, <code>validateResponseExclusivity</code> and the <code>dual</code>/<code>pipe</code> layers show up per endpoint.</li>
+<li><b>Lazy <code>FormData</code>/<code>File</code> guards</b> in <code>Schema.ts</code> (reference the global inside the check, not at module scope) save ~31 ms on Node servers that don't otherwise touch undici.</li>
+<li><b>Minify</b> in deployment: about −12 ms of parse/compile for free.</li>
+</ol>
+
+<h2>Methodology</h2>
+<ul>
+<li><b>API shape.</b> <code>G</code> groups × <code>E</code> endpoints (here 1×1, 1×10, 5×10, 10×10, 50×10). Each group is a REST resource: an entity struct (int, strings, literal union, optional number, array, nested struct), create/update payloads, a <code>TaggedError</code> 404 and a struct 409. Endpoints are list (query params), get, create, update, delete, then <code>actionN</code> endpoints with their own payload/success schemas, all with trivial handlers.</li>
+<li><b>Process model.</b> Harness + API bundled by rolldown into one ESM file (<code>platform: "neutral"</code>, JSDoc stripped, not minified unless stated). Effect resolves from the published npm package exactly like an app. Two warmup processes per size, then 30 measured, sequentially. Node's compile cache is off.</li>
+<li><b>Phases</b> are timed with <code>performance.now()</code> inside the process. Module load = time-to-first-harness-line − median time-to-first-line of an empty script (26.5 ms).</li>
+<li><b>Attribution.</b> <code>--cpu-prof</code> at 100 µs; samples are assigned to phases with <code>process.hrtime</code> marks (the profiler's own clock), and to sources via sourcemaps chained into Effect's <code>.ts</code> files. Before the harness runs, samples are classed as bundle compile (under <code>compileSourceTextModule</code>), module code (bundle frame on stack) or Node bootstrap. <code>node:</code> frames under an undici frame count as undici init.</li>
+<li><b>Caveats.</b> Node is not workerd: V8 is the same, so scaling and hot spots carry over, but absolute times and the undici cost do not. The profiler inflates absolute times by ~23%, so category times are shares scaled to un-profiled medians.</li>
+</ul>
+<details><summary>Raw medians / p95 (ms) for every phase</summary><table><thead><tr><th>Endpoints</th><th class="num">eval</th><th class="num">define</th><th class="num">layer</th><th class="num">handler</th><th class="num">first</th><th class="num">second</th><th class="num">openapi</th><th class="num">CPU total</th><th class="num">heap MB</th><th class="num">bundle KB</th></tr></thead><tbody><tr><td>1</td><td class="num">85.8 <span class="muted">/ 89.3</span></td><td class="num">2.4 <span class="muted">/ 2.5</span></td><td class="num">0.2 <span class="muted">/ 0.2</span></td><td class="num">5.4 <span class="muted">/ 5.5</span></td><td class="num">7.5 <span class="muted">/ 7.7</span></td><td class="num">0.7 <span class="muted">/ 0.7</span></td><td class="num">6.1 <span class="muted">/ 6.2</span></td><td class="num">122.6 <span class="muted">/ 125.6</span></td><td class="num">10.4 <span class="muted">/ 10.4</span></td><td class="num">552</td></tr><tr><td>10</td><td class="num">85.6 <span class="muted">/ 87.5</span></td><td class="num">3.8 <span class="muted">/ 3.9</span></td><td class="num">0.2 <span class="muted">/ 0.2</span></td><td class="num">7.6 <span class="muted">/ 7.7</span></td><td class="num">7.4 <span class="muted">/ 7.6</span></td><td class="num">0.6 <span class="muted">/ 0.7</span></td><td class="num">10.1 <span class="muted">/ 13.3</span></td><td class="num">133.3 <span class="muted">/ 136.6</span></td><td class="num">11.0 <span class="muted">/ 11.3</span></td><td class="num">554</td></tr><tr><td>50</td><td class="num">85.7 <span class="muted">/ 90.0</span></td><td class="num">8.3 <span class="muted">/ 11.5</span></td><td class="num">0.4 <span class="muted">/ 1.6</span></td><td class="num">11.4 <span class="muted">/ 11.9</span></td><td class="num">7.4 <span class="muted">/ 7.6</span></td><td class="num">0.6 <span class="muted">/ 0.6</span></td><td class="num">17.2 <span class="muted">/ 17.5</span></td><td class="num">158.4 <span class="muted">/ 164.3</span></td><td class="num">14.0 <span class="muted">/ 14.1</span></td><td class="num">568</td></tr><tr><td>100</td><td class="num">86.3 <span class="muted">/ 90.7</span></td><td class="num">13.0 <span class="muted">/ 14.7</span></td><td class="num">0.4 <span class="muted">/ 0.5</span></td><td class="num">13.4 <span class="muted">/ 14.0</span></td><td class="num">7.5 <span class="muted">/ 7.8</span></td><td class="num">0.6 <span class="muted">/ 0.7</span></td><td class="num">25.3 <span class="muted">/ 28.3</span></td><td class="num">189.5 <span class="muted">/ 197.8</span></td><td class="num">16.3 <span class="muted">/ 16.4</span></td><td class="num">586</td></tr><tr><td>500</td><td class="num">87.4 <span class="muted">/ 91.9</span></td><td class="num">38.9 <span class="muted">/ 40.5</span></td><td class="num">1.3 <span class="muted">/ 1.4</span></td><td class="num">44.0 <span class="muted">/ 46.2</span></td><td class="num">7.7 <span class="muted">/ 8.0</span></td><td class="num">0.6 <span class="muted">/ 0.7</span></td><td class="num">86.6 <span class="muted">/ 91.1</span></td><td class="num">462.6 <span class="muted">/ 478.8</span></td><td class="num">26.9 <span class="muted">/ 27.2</span></td><td class="num">730</td></tr></tbody></table></details>
+<p class="sub">Reproduce: <code>node scripts/collect.mjs &amp;&amp; node scripts/experiment-formdata.mjs &amp;&amp; node scripts/render-report.mjs</code></p>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+const CHARTS = {"waterfall":{"type":"stack","unit":"ms","series":[{"key":"bootstrap","label":"Node bootstrap","color":"var(--neutral)"},{"key":"moduleLoad","label":"Module load","color":"var(--s1)"},{"key":"define","label":"Define API","color":"var(--s2)"},{"key":"build","label":"Build handler","color":"var(--s3)"},{"key":"first","label":"First request","color":"var(--s4)"}],"rows":[{"label":"1 endpoint","values":{"bootstrap":26.505203,"moduleLoad":59.248723,"define":2.3981185000000025,"build":5.5684770000000015,"first":7.5313514999999995}},{"label":"10 endpoints","values":{"bootstrap":26.505203,"moduleLoad":59.092525499999994,"define":3.7906499999999994,"build":7.7617990000000034,"first":7.448952499999997}},{"label":"50 endpoints","values":{"bootstrap":26.505203,"moduleLoad":59.200824,"define":8.340090500000002,"build":11.759046000000005,"first":7.404202999999995}},{"label":"100 endpoints","values":{"bootstrap":26.505203,"moduleLoad":59.8286155,"define":12.996879999999997,"build":13.842569000000005,"first":7.533251}},{"label":"500 endpoints","values":{"bootstrap":26.505203,"moduleLoad":60.887252,"define":38.91659000000001,"build":45.265857,"first":7.744098499999993}}]},"growth":{"type":"line","unit":"ms","x":[1,10,50,100,500],"xLabel":"endpoints","series":[{"key":"openapi","label":"OpenAPI spec (on demand)","color":"var(--s5)","values":[6.120820000000002,10.079568000000002,17.2242245,25.299318999999997,86.6325645]},{"key":"moduleLoad","label":"Module load","color":"var(--s1)","values":[59.248723,59.092525499999994,59.200824,59.8286155,60.887252]},{"key":"build","label":"Build handler","color":"var(--s3)","values":[5.5684770000000015,7.7617990000000034,11.759046000000005,13.842569000000005,45.265857]},{"key":"define","label":"Define API","color":"var(--s2)","values":[2.3981185000000025,3.7906499999999994,8.340090500000002,12.996879999999997,38.91659000000001]},{"key":"first","label":"First request","color":"var(--s4)","values":[7.5313514999999995,7.448952499999997,7.404202999999995,7.533251,7.744098499999993]}]},"perEndpoint":{"type":"stack","unit":"µs","series":[{"key":"Router (FindMyWay)","label":"Router (FindMyWay)","color":"var(--s1)"},{"key":"HttpApiBuilder","label":"HttpApiBuilder","color":"var(--s2)"},{"key":"HttpApi definition","label":"HttpApi definition","color":"var(--s3)"},{"key":"Schema","label":"Schema","color":"var(--s4)"},{"key":"Effect runtime & Layer","label":"Effect runtime & Layer","color":"var(--s5)"},{"key":"pipe / dual / predicates","label":"pipe / dual / predicates","color":"var(--s6)"},{"key":"Garbage collector","label":"Garbage collector","color":"var(--s7)"},{"key":"Other","label":"Other","color":"var(--s8)"}],"rows":[{"label":"Define API","values":{"Router (FindMyWay)":0,"HttpApiBuilder":0,"HttpApi definition":12.165658273114248,"Schema":24.84886807133889,"Effect runtime & Layer":0.08175192001477113,"pipe / dual / predicates":9.586348758871305,"Garbage collector":7.321914231618174,"Other":16.945369082978253}},{"label":"Build handler","values":{"Router (FindMyWay)":22.851454366642493,"HttpApiBuilder":13.401723516914966,"HttpApi definition":2.886441873958848,"Schema":11.755427275327508,"Effect runtime & Layer":7.240497907827818,"pipe / dual / predicates":8.12110662414034,"Garbage collector":7.101021851689631,"Other":4.017223747468962}},{"label":"OpenAPI spec","values":{"Router (FindMyWay)":0,"HttpApiBuilder":0,"HttpApi definition":39.70644357379168,"Schema":42.60411034937933,"Effect runtime & Layer":1.9667124739214934,"pipe / dual / predicates":2.9879356602635356,"Garbage collector":32.120380011895115,"Other":38.123361729517036}}]},"buildMix":{"type":"stack","unit":"ms","series":[{"key":"Router (FindMyWay)","label":"Router (FindMyWay)","color":"var(--s1)"},{"key":"HttpApiBuilder","label":"HttpApiBuilder","color":"var(--s2)"},{"key":"HttpApi definition","label":"HttpApi definition","color":"var(--s3)"},{"key":"Schema","label":"Schema","color":"var(--s4)"},{"key":"Effect runtime & Layer","label":"Effect runtime & Layer","color":"var(--s5)"},{"key":"pipe / dual / predicates","label":"pipe / dual / predicates","color":"var(--s6)"},{"key":"Garbage collector","label":"Garbage collector","color":"var(--s7)"},{"key":"Other","label":"Other","color":"var(--s8)"}],"rows":[{"label":"1 ep","values":{"Other":0.8743639464398059,"pipe / dual / predicates":0.2520703200171576,"Effect runtime & Layer":2.813537892851016,"HttpApiBuilder":0.6845548362310555,"Schema":0.38662459696883056,"Router (FindMyWay)":0.5573254074921362}},{"label":"10 ep","values":{"Other":0.9989702661439377,"Effect runtime & Layer":2.56379183621768,"pipe / dual / predicates":0.5586060887706527,"HttpApiBuilder":1.8433276407915622,"Schema":0.4174692974703632,"HttpApi definition":0.2140236558013629,"Router (FindMyWay)":1.165610214804444}},{"label":"50 ep","values":{"Other":1.358832535993599,"Effect runtime & Layer":3.4972409863717338,"pipe / dual / predicates":0.5601352345714066,"Garbage collector":1.0665484769893918,"HttpApiBuilder":1.801963092739335,"Schema":1.7581053081847045,"HttpApi definition":0.3192968121208993,"Router (FindMyWay)":1.3969235530289348}},{"label":"100 ep","values":{"Other":1.28380998567545,"Effect runtime & Layer":4.140580696628562,"HttpApiBuilder":2.84310118210651,"Router (FindMyWay)":2.425135235373393,"Schema":1.932228106963615,"pipe / dual / predicates":0.7526281764951905,"HttpApi definition":0.46508561675728444}},{"label":"500 ep","values":{"Other":2.9736555796863366,"Effect runtime & Layer":6.448853494440824,"pipe / dual / predicates":4.335414216257783,"HttpApiBuilder":7.8927258445454935,"HttpApi definition":1.5582619741596566,"Schema":6.438885933838513,"Garbage collector":3.621230588340565,"Router (FindMyWay)":11.996829368730825}}]},"defineMix":{"type":"stack","unit":"ms","series":[{"key":"Router (FindMyWay)","label":"Router (FindMyWay)","color":"var(--s1)"},{"key":"HttpApiBuilder","label":"HttpApiBuilder","color":"var(--s2)"},{"key":"HttpApi definition","label":"HttpApi definition","color":"var(--s3)"},{"key":"Schema","label":"Schema","color":"var(--s4)"},{"key":"Effect runtime & Layer","label":"Effect runtime & Layer","color":"var(--s5)"},{"key":"pipe / dual / predicates","label":"pipe / dual / predicates","color":"var(--s6)"},{"key":"Garbage collector","label":"Garbage collector","color":"var(--s7)"},{"key":"Other","label":"Other","color":"var(--s8)"}],"rows":[{"label":"1 ep","values":{"HttpApi definition":0.8412800203612264,"Schema":1.0304301367787334,"pipe / dual / predicates":0.1307504235270244,"Other":0.39565791933301786}},{"label":"10 ep","values":{"Other":0.6403914474517584,"Schema":1.7303853882531774,"HttpApi definition":1.1865088227842755,"pipe / dual / predicates":0.23336434151078822}},{"label":"50 ep","values":{"Other":1.3118634390640236,"Schema":3.8251390049155023,"pipe / dual / predicates":0.9991439260846604,"HttpApi definition":2.149226685357086,"Effect runtime & Layer":0.05471744457872929}},{"label":"100 ep","values":{"Other":2.2924966430745894,"Schema":5.934080481946281,"HttpApi definition":2.604350978150569,"Garbage collector":1.167784300779694,"pipe / dual / predicates":0.9709554672386991,"Effect runtime & Layer":0.027212128810162994}},{"label":"500 ep","values":{"Other":8.92042704195635,"HttpApi definition":7.198264177153444,"Schema":14.154672357789028,"pipe / dual / predicates":4.999334769119115,"Garbage collector":3.5903345188246365,"Effect runtime & Layer":0.05355713515743052}}]},"evalMix":{"type":"stack","unit":"ms","series":[{"key":"Node: undici init","label":"Node: undici init","color":"var(--s1)"},{"key":"Parse & compile bundle","label":"Parse & compile bundle","color":"var(--s2)"},{"key":"Effect module top-level code","label":"Effect module top-level code","color":"var(--s3)"},{"key":"Garbage collector","label":"Garbage collector","color":"var(--s4)"},{"key":"Other Node / V8","label":"Other Node / V8","color":"var(--s5)"}],"rows":[{"label":"Module load","values":{"Parse & compile bundle":17.48906596663265,"Other Node / V8":1.549223186520464,"Effect module top-level code":10.24437988831906,"Node: undici init":27.82883038832561,"Garbage collector":2.540088570202209}}]},"experiment":{"type":"stack","unit":"ms","series":[{"key":"bootstrap","label":"Node bootstrap","color":"var(--neutral)"},{"key":"moduleLoad","label":"Module load","color":"var(--s1)"},{"key":"define","label":"Define API","color":"var(--s2)"},{"key":"build","label":"Build handler","color":"var(--s3)"},{"key":"first","label":"First request","color":"var(--s4)"}],"rows":[{"label":"As shipped","values":{"bootstrap":26.505203,"moduleLoad":60.005362999999996,"define":13.035629,"build":13.365724999999998,"first":7.519502000000003}},{"label":"FormData ref removed","values":{"bootstrap":26.505203,"moduleLoad":29.492762999999997,"define":15.875692,"build":14.394411000000005,"first":34.614746999999994}}]},"bundle":{"type":"stack","unit":"KB","series":[{"key":"Router (FindMyWay)","label":"Router (FindMyWay)","color":"var(--s1)"},{"key":"HttpApi (definition + builder)","label":"HttpApi (definition + builder)","color":"var(--s2)"},{"key":"Schema","label":"Schema","color":"var(--s3)"},{"key":"HTTP stack (effect/http)","label":"HTTP stack (effect/http)","color":"var(--s4)"},{"key":"Stream / Channel","label":"Stream / Channel","color":"var(--s5)"},{"key":"Effect runtime & Layer","label":"Effect runtime & Layer","color":"var(--s6)"},{"key":"Other Effect modules","label":"Other Effect modules","color":"var(--s7)"},{"key":"App code + harness","label":"App code + harness","color":"var(--s8)"}],"rows":[{"label":"1 ep","values":{"Other Effect modules":92.7412109375,"Effect runtime & Layer":89.0517578125,"HTTP stack (effect/http)":100.84375,"Schema":156.6162109375,"Stream / Channel":20.0537109375,"Router (FindMyWay)":22.7734375,"HttpApi (definition + builder)":66.1875,"App code + harness":3.205078125}},{"label":"500 ep","values":{"Other Effect modules":92.7412109375,"Effect runtime & Layer":89.0517578125,"HTTP stack (effect/http)":100.84375,"Schema":156.6162109375,"Stream / Channel":20.0537109375,"Router (FindMyWay)":22.7734375,"HttpApi (definition + builder)":66.31640625,"App code + harness":181.87109375}}]}};
+const tip = document.getElementById("tip");
+const NS = "http://www.w3.org/2000/svg";
+const svgEl = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const fmt = (v, unit) => (unit === "KB" || unit === "µs" ? Math.round(v).toLocaleString("en-US") : v >= 100 ? Math.round(v).toString() : v.toFixed(1)) + " " + unit;
+const showTip = (ev, html) => {
+  tip.innerHTML = html;
+  tip.style.opacity = 1;
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - 14;
+  if (y + h > innerHeight - 8) y = ev.clientY - h - 14;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+};
+const hideTip = () => { tip.style.opacity = 0; };
+const nice = (max) => {
+  const raw = max / 4, mag = 10 ** Math.floor(Math.log10(raw));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw);
+  return { step, max: Math.ceil(max / step) * step };
+};
+const legend = (mount, series) => {
+  const l = document.createElement("div");
+  l.className = "legend";
+  l.innerHTML = series.map((s) => '<span><i style="background:' + s.color + '"></i>' + s.label + "</span>").join("");
+  mount.appendChild(l);
+};
+
+function stack(mount, c) {
+  const series = c.series.filter((s) => c.rows.some((r) => (r.values[s.key] ?? 0) > 0));
+  if (series.length > 1) legend(mount, series);
+  const W = mount.clientWidth, labelW = Math.min(150, Math.max(...c.rows.map((r) => r.label.length)) * 7.2 + 12), right = 64;
+  const barH = 22, gap = 16, top = 4, axisH = 22;
+  const H = top + c.rows.length * (barH + gap) - gap + axisH + 6;
+  const svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, height: H });
+  const totals = c.rows.map((r) => series.reduce((n, s) => n + Math.max(0, r.values[s.key] ?? 0), 0));
+  const { step, max } = nice(Math.max(...totals));
+  const plotW = W - labelW - right, x = (v) => labelW + (v / max) * plotW;
+  const yAxis = top + c.rows.length * (barH + gap) - gap + 4;
+  for (let t = 0; t <= max + 1e-9; t += step) {
+    svgEl("line", { x1: x(t), x2: x(t), y1: top - 2, y2: yAxis, stroke: "var(--grid)", "stroke-width": 1 }, svg);
+    svgEl("text", { x: x(t), y: yAxis + 14, "text-anchor": "middle" }, svg).textContent = Math.round(t).toLocaleString("en-US") + " " + c.unit;
+  }
+  c.rows.forEach((r, i) => {
+    const y = top + i * (barH + gap);
+    svgEl("text", { x: labelW - 10, y: y + barH / 2 + 4, "text-anchor": "end", class: "lbl" }, svg).textContent = r.label;
+    let acc = 0;
+    const segs = series.map((s) => ({ s, v: Math.max(0, r.values[s.key] ?? 0) })).filter((d) => d.v > 0);
+    segs.forEach((d, j) => {
+      const x0 = x(acc), x1 = x(acc + d.v);
+      acc += d.v;
+      const last = j === segs.length - 1;
+      const w = Math.max(0.5, x1 - x0 - (last ? 0 : 2));
+      const rad = last ? Math.min(4, w / 2) : 0;
+      const p = "M" + x0 + "," + y + "h" + (w - rad) + (rad ? "a" + rad + "," + rad + " 0 0 1 " + rad + "," + rad : "") + "v" + (barH - 2 * rad) + (rad ? "a" + rad + "," + rad + " 0 0 1 " + -rad + "," + rad : "") + "h" + -(w - rad) + "z";
+      const path = svgEl("path", { d: p, fill: d.s.color }, svg);
+      const hit = svgEl("rect", { x: x0, y: y - 4, width: Math.max(6, x1 - x0), height: barH + 8, fill: "transparent" }, svg);
+      const html = "<b>" + r.label + "</b><div class='row'><span><i class='k' style='background:" + d.s.color + "'></i>" + d.s.label + "</span><span>" + fmt(d.v, c.unit) + "</span></div><div class='row'><span>share of bar</span><span>" + Math.round((d.v / totals[i]) * 100) + "%</span></div>";
+      hit.addEventListener("mousemove", (ev) => { path.setAttribute("opacity", 0.8); showTip(ev, html); });
+      hit.addEventListener("mouseleave", () => { path.setAttribute("opacity", 1); hideTip(); });
+    });
+    svgEl("text", { x: x(totals[i]) + 8, y: y + barH / 2 + 4, class: "val" }, svg).textContent = fmt(totals[i], c.unit);
+  });
+  mount.appendChild(svg);
+}
+
+function line(mount, c) {
+  legend(mount, c.series);
+  const W = mount.clientWidth, H = 300, left = 44, right = 150, top = 10, bottom = 34;
+  const svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, height: H });
+  const xmax = Math.max(...c.x), { step, max } = nice(Math.max(...c.series.flatMap((s) => s.values)));
+  const X = (v) => left + (v / xmax) * (W - left - right), Y = (v) => top + (1 - v / max) * (H - top - bottom);
+  for (let t = 0; t <= max + 1e-9; t += step) {
+    svgEl("line", { x1: left, x2: W - right, y1: Y(t), y2: Y(t), stroke: t === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1 }, svg);
+    svgEl("text", { x: left - 8, y: Y(t) + 4, "text-anchor": "end" }, svg).textContent = Math.round(t) + (t === max ? " " + c.unit : "");
+  }
+  const xt = nice(xmax);
+  for (let t = 0; t <= xmax + 1e-9; t += xt.step) svgEl("text", { x: X(t), y: H - bottom + 18, "text-anchor": "middle" }, svg).textContent = t;
+  svgEl("text", { x: W - right, y: H - 2, "text-anchor": "end" }, svg).textContent = c.xLabel + " →";
+  const ends = [];
+  for (const s of c.series) {
+    const d = s.values.map((v, i) => (i ? "L" : "M") + X(c.x[i]) + "," + Y(v)).join("");
+    svgEl("path", { d, fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+    s.values.forEach((v, i) => svgEl("circle", { cx: X(c.x[i]), cy: Y(v), r: 4, fill: s.color, stroke: "var(--surface)", "stroke-width": 2 }, svg));
+    ends.push({ s, y: Y(s.values.at(-1)), v: s.values.at(-1) });
+  }
+  ends.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
+  for (const e of ends) {
+    const t = svgEl("text", { x: X(xmax) + 10, y: e.y + 4, class: "lbl" }, svg);
+    t.textContent = e.s.label.replace(" (on demand)", "") + " " + (e.v >= 100 ? Math.round(e.v) : e.v.toFixed(1));
+  }
+  const cross = svgEl("line", { y1: top, y2: H - bottom, stroke: "var(--axis)", "stroke-width": 1, opacity: 0 }, svg);
+  const hit = svgEl("rect", { x: left, y: top, width: W - left - right, height: H - top - bottom, fill: "transparent" }, svg);
+  hit.addEventListener("mousemove", (ev) => {
+    const pt = svg.getBoundingClientRect(), mx = ((ev.clientX - pt.left) / pt.width) * W;
+    let best = 0;
+    c.x.forEach((v, i) => { if (Math.abs(X(v) - mx) < Math.abs(X(c.x[best]) - mx)) best = i; });
+    cross.setAttribute("x1", X(c.x[best])); cross.setAttribute("x2", X(c.x[best])); cross.setAttribute("opacity", 1);
+    const rows = [...c.series].sort((a, b) => b.values[best] - a.values[best]).map((s) => "<div class='row'><span><i class='k' style='background:" + s.color + "'></i>" + s.label + "</span><span>" + fmt(s.values[best], c.unit) + "</span></div>").join("");
+    showTip(ev, "<b>" + c.x[best] + " " + c.xLabel + "</b>" + rows);
+  });
+  hit.addEventListener("mouseleave", () => { cross.setAttribute("opacity", 0); hideTip(); });
+  mount.appendChild(svg);
+}
+
+const renderAll = () => {
+  for (const mount of document.querySelectorAll("[data-chart]")) {
+    const c = CHARTS[mount.dataset.chart];
+    mount.innerHTML = "";
+    if (!c) continue;
+    (c.type === "line" ? line : stack)(mount, c);
+  }
+};
+renderAll();
+let rt;
+addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(renderAll, 120); });
+</script>
+</body>
+</html>
