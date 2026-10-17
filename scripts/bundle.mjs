@@ -66,11 +66,13 @@ const inputSourcemapPlugin = () => ({
   }
 })
 
-export async function bundle({ apiFile, outFile, effectPkg, minify = false, sourcemap = false }) {
+// mode "handler": web-handler harness, platform-neutral (Worker-like).
+// mode "server":  real node:http server harness (@effect/platform-node).
+export async function bundle({ apiFile, outFile, effectPkg, minify = false, sourcemap = false, mode = "handler" }) {
   mkdirSync(dirname(outFile), { recursive: true })
   const build = await rolldown({
-    input: join(root, "scripts", "harness.mjs"),
-    platform: "neutral",
+    input: join(root, "scripts", mode === "server" ? "harness-server.mjs" : "harness.mjs"),
+    platform: mode === "server" ? "node" : "neutral",
     treeshake: true,
     resolve: {
       alias: { "bench:api": resolve(apiFile) },

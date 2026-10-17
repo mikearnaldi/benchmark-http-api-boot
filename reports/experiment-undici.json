@@ -1,0 +1,48 @@
+{
+  "size": "10x10",
+  "runs": 25,
+  "node": "v24.21.0",
+  "isolated": {
+    "touchFormDataMs": 29.168301,
+    "esmImportNodeHttpMs": 32.225959,
+    "getBuiltinModuleNodeHttpMs": 4.675635999999997
+  },
+  "handler": {
+    "baseline": {
+      "eval": 85.084035,
+      "define": 14.26310500000001,
+      "handler": 13.332517999999993,
+      "first": 7.490497000000005,
+      "total": 120.303353
+    },
+    "withoutFormData": {
+      "eval": 55.51314,
+      "define": 15.704285000000006,
+      "handler": 14.390903000000009,
+      "first": 34.418029000000004,
+      "total": 121.057243
+    }
+  },
+  "server": {
+    "As shipped": {
+      "moduleLoad": 99.061745,
+      "coldStart": 157.72484199999963,
+      "undiciLoaded": true
+    },
+    "FormData ref removed": {
+      "moduleLoad": 98.542351,
+      "coldStart": 157.84403999999995,
+      "undiciLoaded": true
+    },
+    "node:http via getBuiltinModule": {
+      "moduleLoad": 98.66875,
+      "coldStart": 156.4661589999996,
+      "undiciLoaded": true
+    },
+    "Both removed": {
+      "moduleLoad": 81.355586,
+      "coldStart": 140.61937599999874,
+      "undiciLoaded": false
+    }
+  }
+}

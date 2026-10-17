@@ -3,7 +3,11 @@
 //   node scripts/bench.mjs [--sizes 1x5,10x10,50x10,100x10] [--runs 30]
 //                          [--effect-pkg ../effect/packages/effect]  (built: has dist/)
 //                          [--label name] [--minify] [--openapi]
-//                          [--warm N] [--compile-cache]
+//                          [--warm N] [--compile-cache] [--server]
+//
+// --server         real cold start: spawn a node:http server (via
+//                  @effect/platform-node), wait until it listens, send one HTTP
+//                  request over loopback, measure spawn → response received
 //
 // --warm N         also rebuild define/build/request N times in-process after
 //                  the cold pass and report the last (warm) iteration
@@ -13,7 +17,8 @@
 // For every size: generate the API, bundle it, then spawn `--runs` fresh node
 // processes (sequentially, after 2 discarded warmup runs for the OS file cache)
 // and report median / p95 of every phase. Results are written to results/.
-import { execFileSync } from "node:child_process"
+import { execFileSync, spawn } from "node:child_process"
+import * as http from "node:http"
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
@@ -34,7 +39,8 @@ const { values: opts } = parseArgs({
     openapi: { type: "boolean", default: false },
     out: { type: "string" },
     warm: { type: "string", default: "0" },
-    "compile-cache": { type: "boolean", default: false }
+    "compile-cache": { type: "boolean", default: false },
+    server: { type: "boolean", default: false }
   }
 })
 
@@ -53,16 +59,73 @@ const quantile = (xs, q) => {
 }
 
 // One cache dir per bundle so sizes never share entries.
-const runProcess = (file) => JSON.parse(execFileSync(process.execPath, [file], {
-  env: compileCacheRoot ? { ...env, NODE_COMPILE_CACHE: join(compileCacheRoot, file.replace(/[^a-z0-9]/gi, "_")) } : env,
-  encoding: "utf8"
-}))
+const envFor = (file) => compileCacheRoot ? { ...env, NODE_COMPILE_CACHE: join(compileCacheRoot, file.replace(/[^a-z0-9]/gi, "_")) } : env
+const runProcess = async (file) => JSON.parse(execFileSync(process.execPath, [file], { env: envFor(file), encoding: "utf8" }))
 
-const sample = (file) => {
-  runProcess(file)
-  runProcess(file)
+// Server mode: everything is timed from just before spawn() in this (warm)
+// parent process. `ready` lines from a server trigger one GET; an empty script
+// (baseline) only prints a ready line without a port.
+// Same route the in-process harness hits: GET /r0/1, or the list route for
+// 1-endpoint groups (which have no /r0/:id).
+const pathFor = (file) => (/api-\d+x1\.mjs$/.test(file) ? "/r0" : "/r0/1")
+const runServer = (file) => new Promise((resolve, _reject) => {
+  const t0 = performance.now()
+  const child = spawn(process.execPath, [file], { env: envFor(file), stdio: ["ignore", "pipe", "inherit"] })
+  const out = {}
+  let buf = ""
+  let pending = 2
+  const done = () => {
+    if (--pending > 0) return
+    child.kill()
+    resolve(out)
+  }
+  const reject = (err) => {
+    child.kill()
+    _reject(err)
+  }
+  const timer = setTimeout(() => reject(new Error(`${file}: timed out`)), 30_000)
+  child.on("exit", () => clearTimeout(timer))
+  child.stdout.on("data", (chunk) => {
+    buf += chunk
+    let i
+    while ((i = buf.indexOf("\n")) >= 0) {
+      const msg = JSON.parse(buf.slice(0, i))
+      buf = buf.slice(i + 1)
+      if (msg.ready) {
+        const tReady = performance.now()
+        Object.assign(out, msg, { spawnReady: tReady - t0 })
+        delete out.ready
+        delete out.port
+        if (!msg.port) {
+          pending = 1
+          done()
+          continue
+        }
+        http.get({ host: "127.0.0.1", port: msg.port, path: pathFor(file), agent: false }, (res) => {
+          res.resume()
+          res.on("end", () => {
+            if (res.statusCode !== 200) return reject(new Error(`${file}: status ${res.statusCode}`))
+            const tEnd = performance.now()
+            out.rtt = tEnd - tReady
+            out.coldStart = tEnd - t0
+            done()
+          })
+        }).on("error", reject)
+      } else if (msg.served) {
+        delete msg.served
+        Object.assign(out, msg)
+        done()
+      }
+    }
+  })
+})
+const runOne = opts.server ? runServer : runProcess
+
+const sample = async (file) => {
+  await runOne(file)
+  await runOne(file)
   const samples = []
-  for (let i = 0; i < runs; i++) samples.push(runProcess(file))
+  for (let i = 0; i < runs; i++) samples.push(await runOne(file))
   const stats = {}
   for (const key of Object.keys(samples[0])) {
     const xs = samples.map((s) => s[key])
@@ -74,8 +137,13 @@ const sample = (file) => {
 // Node bootstrap cost with no code at all, to subtract from `eval`.
 const emptyFile = join(root, "dist", "empty.mjs")
 mkdirSync(dirname(emptyFile), { recursive: true })
-writeFileSync(emptyFile, `process.stdout.write(JSON.stringify({ eval: performance.now() }))`)
-const nodeBaseline = sample(emptyFile).stats.eval.median
+writeFileSync(emptyFile, opts.server
+  ? `process.stdout.write(JSON.stringify({ ready: true, eval: performance.now() }) + "\\n")`
+  : `process.stdout.write(JSON.stringify({ eval: performance.now() }))`)
+const baselineStats = (await sample(emptyFile)).stats
+const nodeBaseline = baselineStats.eval.median
+// Server mode: spawn → first stdout line of an empty script (fork/exec + boot + pipe).
+const spawnBaseline = opts.server ? baselineStats.spawnReady.median : undefined
 
 console.log(`node ${process.version} | effect: ${opts["effect-pkg"] ?? "npm"} | runs: ${runs} | node bootstrap: ${nodeBaseline.toFixed(1)}ms\n`)
 
@@ -87,15 +155,28 @@ for (const sizeStr of opts.sizes.split(",")) {
     apiFile,
     outFile: join(root, "dist", label, `api-${sizeStr}.mjs`),
     effectPkg: opts["effect-pkg"],
-    minify: opts.minify
+    minify: opts.minify,
+    mode: opts.server ? "server" : "handler"
   })
-  const { stats, samples } = sample(outFile)
+  const { stats, samples } = await sample(outFile)
   results.push({ size: sizeStr, endpoints: size.groups * size.endpoints, bundleKB: bytes / 1024, stats, samples })
   process.stderr.write(`  ${sizeStr} done\n`)
 }
 
-const phases = ["eval", "define", "layer", "handler", "first", "second", ...(opts.openapi ? ["openapi"] : []), "total", "cpuTotal"]
 const fmt = (s) => `${s.median.toFixed(1)} (${s.p95.toFixed(1)})`
+if (opts.server) {
+  console.log(`median ms (p95) — spawn baseline (empty script): ${spawnBaseline.toFixed(1)}ms\n`)
+  console.table(Object.fromEntries(results.map((r) => [`${r.size} (${r.endpoints} ep)`, {
+    "bundle KB": Math.round(r.bundleKB),
+    ...Object.fromEntries(["eval", "define", "layer", "listen", "spawnReady", "request", "rtt", "coldStart", "cpuAtResponse"].map((p) => [p, fmt(r.stats[p])]))
+  }])))
+  mkdirSync(join(root, "results"), { recursive: true })
+  const out = opts.out ?? join(root, "results", `${label}-server-${new Date().toISOString().replace(/[:.]/g, "-")}.json`)
+  writeFileSync(out, JSON.stringify({ node: process.version, effect: opts["effect-pkg"] ?? "npm", mode: "server", runs, nodeBaseline, spawnBaseline, results }, null, 2))
+  console.log(`\nwrote ${out}`)
+  process.exit(0)
+}
+const phases = ["eval", "define", "layer", "handler", "first", "second", ...(opts.openapi ? ["openapi"] : []), "total", "cpuTotal"]
 console.log("median ms (p95)  —  eval includes node bootstrap; 'eval-node' subtracts it\n")
 console.table(Object.fromEntries(results.map((r) => [
   `${r.size} (${r.endpoints} ep)`,

@@ -1,6 +1,6 @@
 // Renders reports/report.html: a cold-start report for effect/http-api.
 // Inputs: reports/data.json, reports/bench-*.json (with samples) and
-// reports/experiment-formdata.json. Self-contained: inline CSS/JS/SVG.
+// reports/experiment-undici.json. Self-contained: inline CSS/JS/SVG.
 //
 //   node scripts/render-report.mjs
 import { existsSync, readFileSync, writeFileSync } from "node:fs"
@@ -12,7 +12,10 @@ const read = (f) => JSON.parse(readFileSync(join(root, "reports", f), "utf8"))
 const data = read("data.json")
 const raw = read("bench-normal.json")
 const rawWarm = read("bench-warm.json")
-const exp = existsSync(join(root, "reports", "experiment-formdata.json")) ? read("experiment-formdata.json") : null
+const rawServer = read("bench-server.json")
+const expU = existsSync(join(root, "reports", "experiment-undici.json")) ? read("experiment-undici.json") : null
+// Web-handler view of the undici experiment (FormData reference only).
+const exp = expU && { size: expU.size, runs: expU.runs, baseline: expU.handler.baseline, withoutFormData: expU.handler.withoutFormData, emptyProcessFormDataTouchMs: expU.isolated.touchFormDataMs }
 
 // ------------------------------------------------------------------ stats
 const quantile = (xs, q) => {
@@ -76,6 +79,26 @@ const warmRows = rawWarm.results.map((r) => ({
     warm: s.warmDefine + s.warmLayer + s.warmHandler + s.warmFirst
   }))
 }))
+// Real cold start: spawn a node:http server, one HTTP request over loopback.
+const serverRows = rawServer.results.map((r) => ({
+  size: r.size,
+  endpoints: r.endpoints,
+  bundleKB: r.bundleKB,
+  ...summarize(r.samples, (s) => ({
+    spawn: s.spawnReady - (s.eval + s.define + s.layer + s.listen),
+    boot: B,
+    moduleLoad: s.eval - B,
+    define: s.define,
+    build: s.layer + s.listen,
+    request: s.rtt,
+    serverRequest: s.request,
+    coldStart: s.coldStart,
+    ready: s.spawnReady,
+    cpu: s.cpuAtResponse
+  }))
+}))
+const SS = serverRows[0]
+const SL = serverRows.at(-1)
 const minRows = data.timingsMin.results
 const cacheRows = data.timingsCache.results
 const minB = data.timingsMin.nodeBaseline
@@ -83,6 +106,7 @@ const cacheB = data.timingsCache.nodeBaseline
 const E = rows.map((r) => r.endpoints)
 const fitOf = (list, key) => fit(E, list.map((r) => (key === "bundleKB" ? r.bundleKB : r.med[key])))
 const fits = Object.fromEntries(["moduleLoad", "define", "build", "first", "cold", "afterLoad", "cpuCold", "heap", "bundleKB", "openapi"].map((k) => [k, fitOf(rows, k)]))
+const serverFits = Object.fromEntries(["coldStart", "define", "build", "request", "moduleLoad", "cpu"].map((k) => [k, fit(E, serverRows.map((r) => r.med[k]))]))
 const warmFits = { cold: fitOf(warmRows, "cold"), warm: fitOf(warmRows, "warm") }
 const S = rows[0]
 const L = rows.at(-1)
@@ -208,7 +232,23 @@ const COLDWARM = [
   { key: "penalty", label: "Cold-code penalty", color: "var(--s2)" }
 ]
 
+const SERVER_ANATOMY = [
+  { key: "spawn", label: "Spawn (fork/exec, ready signal)", color: "var(--neutral-2)" },
+  { key: "boot", label: "Node boot", color: "var(--neutral)" },
+  { key: "moduleLoad", label: "Module load", color: "var(--s1)" },
+  { key: "define", label: "Define API", color: "var(--s2)" },
+  { key: "build", label: "Build handler + listen", color: "var(--s3)" },
+  { key: "request", label: "First HTTP request", color: "var(--s4)" }
+]
 const charts = {
+  serverAnatomy: {
+    type: "stack", unit: "ms", series: SERVER_ANATOMY,
+    rows: serverRows.map((r) => ({ label: `${r.endpoints} endpoint${r.endpoints === 1 ? "" : "s"}`, values: Object.fromEntries(SERVER_ANATOMY.map((x) => [x.key, r.med[x.key]])) }))
+  },
+  undici: expU && {
+    type: "stack", unit: "ms", series: [{ key: "cold", label: "Server cold start", color: "var(--s1)" }],
+    rows: Object.entries(expU.server).map(([name, v]) => ({ label: name, values: { cold: v.coldStart } }))
+  },
   anatomy: {
     type: "stack", unit: "ms", series: ANATOMY,
     rows: rows.map((r, i) => ({ label: `${r.endpoints} endpoint${r.endpoints === 1 ? "" : "s"}`, values: anatomyOf(r, attribution[i]) }))
@@ -263,6 +303,15 @@ const tblAnatomy = table(
     return [r.endpoints, f1(a.boot), f1(a.compile), f1(a.eval), f1(a.undici), f1(a.define), f1(a.build), f1(a.first), `<b>${f1(r.med.cold)}</b>`, f1(r.p95.cold), f1(r.med.cpuCold)]
   })
 )
+const tblServer = table(
+  ["Endpoints", "Spawn", "Node boot", "Module load", "Define", "Build + listen", "First HTTP request", "<b>Cold start p50</b>", "p95", "CPU (all threads)", "Bundle KB"],
+  serverRows.map((r) => [r.endpoints, f1(r.med.spawn), f1(r.med.boot), f1(r.med.moduleLoad), f1(r.med.define), f1(r.med.build), f1(r.med.request), `<b>${f1(r.med.coldStart)}</b>`, f1(r.p95.coldStart), f1(r.med.cpu), f0(r.bundleKB)])
+)
+const tblUndici = expU && table(
+  ["Server variant (" + expU.size + ")", "Module load", "Cold start", "undici loaded?"],
+  Object.entries(expU.server).map(([name, v]) => [name, f1(v.moduleLoad - B), `<b>${f1(v.coldStart)}</b>`, v.undiciLoaded ? "yes" : "no"])
+)
+const undiciSaving = expU ? expU.server["As shipped"].coldStart - expU.server["Both removed"].coldStart : 0
 const tblColdWarm = table(
   ["Endpoints", "Define cold / warm", "Build cold / warm", "First request cold / warm", "Total cold / warm", "Cold-code penalty"],
   warmRows.map((w) => [
@@ -312,7 +361,7 @@ const tblLevers = table(
     ["As shipped", f1(S.med.moduleLoad), "", ""],
     ["Minify (rolldown/Oxc)", f1(minLoad(0)), `−${f1(loadOf(0) - minLoad(0))} ms`, "any runtime"],
     ["Node compile cache (V8 code cache on disk)", f1(cacheLoad(0)), `−${f1(loadOf(0) - cacheLoad(0))} ms`, "Node (e.g. Lambda with a cache dir)"],
-    ...(exp ? [["No <code>globalThis.FormData</code> at module scope", f1(exp.withoutFormData.eval - B), `−${f1(undiciMs)} ms`, "Node servers that don't use web <code>Request</code>"]] : [])
+    ...(exp ? [["No <code>globalThis.FormData</code> at module scope", f1(exp.withoutFormData.eval - B), `−${f1(undiciMs)} ms`, "moves to the first <code>new Request()</code> on Node; a server also needs the <code>node:http</code> fix (§4)"]] : [])
   ]
 )
 const tblLeversAll = table(
@@ -416,22 +465,30 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <h1>Effect HttpApi cold start</h1>
 <p class="sub">effect ${esc(env.effect)} · node ${esc(env.node)} · ${esc(env.platform)} · ${esc(env.cpu)} (${env.cores} cores) · rolldown ${esc(env.rolldown)} · ${env.runs} fresh processes per size · ${esc(new Date(data.generatedAt).toUTCString())}</p>
 
-<p><b>Cold start</b> is everything a brand-new process or isolate does before it can send its first response: boot the runtime, parse and compile the bundle, evaluate the modules (which in an Effect app also defines the API and builds the handler at module scope), then serve the first request with code V8 has never run before. This is what a serverless platform pays on every new instance, and what a Worker spends against its startup CPU budget. Each sample below is a <b>fresh <code>node</code> process</b> running a single rolldown bundle of an <code>effect/http-api</code> app with <b>${E.join(", ")}</b> endpoints.</p>
+<p><b>Cold start = start the server and answer one request.</b> Each sample launches a brand-new <code>node</code> process running a single rolldown bundle of an <code>effect/http-api</code> server (<code>HttpRouter.serve</code> on <code>@effect/platform-node</code>'s <code>NodeHttpServer</code>), waits until it is listening, sends one real HTTP <code>GET</code> over loopback and stops the clock when the response has been fully received. The clock starts just before <code>spawn()</code>, so it covers everything: process creation, Node boot, parsing, compiling and evaluating the bundle, defining the API, building the handler, binding the socket, and serving a request with code V8 has never run before. APIs have <b>${E.join(", ")}</b> endpoints.</p>
 
 <div class="tiles">
-  <div class="tile"><div class="label">Cold start, ${S.endpoints} endpoint</div><div class="value">${f0(S.med.cold)} <small>ms</small></div><div class="note">process start → first response · p95 ${f0(S.p95.cold)} ms</div></div>
-  <div class="tile"><div class="label">Cold start, ${L.endpoints} endpoints</div><div class="value">${f0(L.med.cold)} <small>ms</small></div><div class="note">p95 ${f0(L.p95.cold)} ms · ${f0(L.med.cpuCold)} ms CPU across all threads</div></div>
-  <div class="tile"><div class="label">Added per endpoint</div><div class="value">${f0(fits.cold.slope * 1000)} <small>µs</small></div><div class="note">linear (R² ${fits.cold.r2.toFixed(3)}); the same work costs ${f0(warmFits.warm.slope * 1000)} µs once code is hot</div></div>
+  <div class="tile"><div class="label">Server cold start, ${SS.endpoints} endpoint</div><div class="value">${f0(SS.med.coldStart)} <small>ms</small></div><div class="note">spawn → HTTP response received · p95 ${f0(SS.p95.coldStart)} ms</div></div>
+  <div class="tile"><div class="label">Server cold start, ${SL.endpoints} endpoints</div><div class="value">${f0(SL.med.coldStart)} <small>ms</small></div><div class="note">p95 ${f0(SL.p95.coldStart)} ms · ${f0(SL.med.cpu)} ms CPU across all threads</div></div>
+  <div class="tile"><div class="label">Added per endpoint</div><div class="value">${f0(serverFits.coldStart.slope * 1000)} <small>µs</small></div><div class="note">linear (R² ${serverFits.coldStart.r2.toFixed(3)}); the same work costs ${f0(warmFits.warm.slope * 1000)} µs once code is hot</div></div>
   <div class="tile"><div class="label">Cold-code penalty</div><div class="value">${pct(penalty(WL), WL.med.cold)}</div><div class="note">of define + build + first request at ${WL.endpoints} endpoints (${pct(penalty(WS), WS.med.cold)} at ${WS.endpoints}) is V8 running code for the first time</div></div>
 </div>
 
 <div class="callout">
-<p><b>Summary.</b> A minimal HttpApi app cold-starts in <b>${f0(S.med.cold)} ms</b> (${f0(B)} ms Node boot, ${f0(S.med.moduleLoad)} ms loading the bundle, ${f0(S.med.afterLoad)} ms to define, build and serve). Each endpoint adds <b>~${f0(fits.cold.slope * 1000)} µs</b>, so 500 endpoints take <b>${f0(L.med.cold)} ms</b>, and at that size the API work (${f0(afterLoadL)} ms) is larger than module load (${f0(L.med.moduleLoad)} ms). The biggest finding is that <b>most of the post-load time is not the work itself but running it cold</b>: rebuilding the same API in the same process once V8 has compiled and optimized the code takes ${f1(WS.med.warm)} ms instead of ${f1(WS.med.cold)} ms at ${WS.endpoints} endpoint and ${f0(WL.med.warm)} ms instead of ${f0(WL.med.cold)} ms at ${WL.endpoints}. Cold start is therefore driven as much by <i>how much distinct code runs at startup</i> as by how much work it does.</p>
+<p><b>Summary.</b> Starting a minimal HttpApi server and getting a response back takes <b>${f0(SS.med.coldStart)} ms</b>: ${f0(SS.med.spawn + SS.med.boot)} ms to spawn and boot Node, ${f0(SS.med.moduleLoad)} ms to load the bundle, ${f0(SS.med.define + SS.med.build)} ms to define the API, build the handler and listen, and ${f0(SS.med.request)} ms for the first request. Each endpoint adds <b>~${f0(serverFits.coldStart.slope * 1000)} µs</b>, so 500 endpoints take <b>${f0(SL.med.coldStart)} ms</b>. About ${f0(undiciSaving)} ms of every Node server cold start is Node initializing undici for web APIs the server never uses (§4). The biggest finding is that <b>most of the post-load time is not the work itself but running it cold</b>: rebuilding the same API in the same process once V8 has compiled and optimized the code takes ${f1(WS.med.warm)} ms instead of ${f1(WS.med.cold)} ms at ${WS.endpoints} endpoint and ${f0(WL.med.warm)} ms instead of ${f0(WL.med.cold)} ms at ${WL.endpoints}. Cold start is therefore driven as much by <i>how much distinct code runs at startup</i> as by how much work it does.</p>
 </div>
 
 <h2>1 · Anatomy of a cold start</h2>
-<p>Every phase between process start and the first response, as medians and in execution order. Module load is split into parse/compile, Effect's module evaluation and Node's undici initialization using CPU-profile shares. <b>Define API</b> is <code>HttpApi.make(…).add(…)</code> with all its schemas, and <b>Build handler</b> is <code>HttpApiBuilder.group/layer</code> + <code>HttpRouter.toWebHandler</code>; in a real app both run at module scope during startup. <b>First request</b> is one <code>GET</code> through the freshly built handler.</p>
-<div class="card"><h4>Process start → first response</h4><p class="caption">median ms · hover for values</p><div class="chart" data-chart="anatomy"></div>${details("Table view", tblAnatomy)}</div>
+<p>Every phase from <code>spawn()</code> to the HTTP response arriving back at the client, as medians and in execution order. <b>Spawn</b> is process creation plus the time for the "listening" line to reach the client (measured with an empty script: ${f1(rawServer.spawnBaseline)} ms to its first output line, which also includes Node boot). <b>Define API</b> is <code>HttpApi.make(…).add(…)</code> with all its schemas. <b>Build handler + listen</b> is <code>HttpApiBuilder</code> plus building the <code>HttpRouter.serve</code> layer on <code>NodeHttpServer</code> until the socket is bound. <b>First HTTP request</b> is the client's round trip for one <code>GET</code>, of which ${f1(SS.med.serverRequest)} ms is spent inside the server.</p>
+<div class="card"><h4>Server cold start: spawn → first HTTP response</h4><p class="caption">median ms · hover for values</p><div class="chart" data-chart="serverAnatomy"></div>${details("Table view", tblServer)}</div>
+<ul>
+<li><b>Before any API code runs</b>, a server has already spent ${f0(SS.med.spawn + SS.med.boot + SS.med.moduleLoad)} ms on spawning, booting Node and loading the ${f0(SS.bundleKB)} KB bundle: ${pct(SS.med.spawn + SS.med.boot + SS.med.moduleLoad, SS.med.coldStart)} of a small server's cold start.</li>
+<li><b>Define + build + listen</b> grow with the API: ${f0(SS.med.define + SS.med.build)} ms at ${SS.endpoints} endpoint, ${f0(SL.med.define + SL.med.build)} ms at ${SL.endpoints}.</li>
+<li><b>The first HTTP request</b> takes ${f1(SS.med.request)}–${f1(SL.med.request)} ms. It is cold too: the server runs the request path (parsing, routing, decoding, encoding) for the first time.</li>
+</ul>
+<h3>Web-handler mode (Worker-style)</h3>
+<p>The same app as a web handler (<code>HttpRouter.toWebHandler</code>, platform-neutral bundle, request passed in-process as a <code>Request</code>), which is how it would run on Cloudflare Workers or another fetch-based runtime. There is no spawn, socket or Node server stack, and the clock runs from process start to the response body. This mode is also what the CPU profiles and the cold/warm experiment below use.</p>
+<div class="card"><h4>Web handler: process start → first response</h4><p class="caption">median ms · module load split by CPU-profile shares · hover for values</p><div class="chart" data-chart="anatomy"></div>${details("Table view", tblAnatomy)}</div>
 <ul>
 <li><b>Small APIs are dominated by fixed cost.</b> At ${S.endpoints} endpoint, ${pct(B + S.med.moduleLoad, S.med.cold)} of the cold start happens before any API code runs. Of the ${f0(S.med.moduleLoad)} ms module load, ~${f0(loadAvg["Parse & compile bundle"])} ms is parsing and compiling the ${f0(S.bundleKB)} KB bundle and ~${f0(loadAvg["Node: undici init"])} ms is Node initializing undici (Node-only, see §4).</li>
 <li><b>In large APIs, define + build become the largest part:</b> ${pct(L.med.define + L.med.build, L.med.cold)} of the cold start at ${L.endpoints} endpoints, ahead of module load (${pct(L.med.moduleLoad, L.med.cold)}) and Node boot (${pct(B, L.med.cold)}).</li>
@@ -479,17 +536,24 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <div class="card"><h4>Inside module load</h4><p class="caption">ms, profile shares scaled to the measured median, averaged over sizes</p><div class="chart" data-chart="load"></div>${details("Table view", tblLoad)}</div>
 <ul>
 <li><b>Parse & compile (~${pct(loadAvg["Parse & compile bundle"], S.med.moduleLoad)})</b> scales with bundle size. HttpApi pulls in Schema, the HTTP server stack (request/response, cookies, multipart), streams and the router whatever the API uses, so the floor is ${f0(S.bundleKB)} KB unminified.</li>
-<li><b>undici init (~${pct(loadAvg["Node: undici init"], S.med.moduleLoad)}, Node only).</b> <code>Schema.ts</code> evaluates <code>instanceOf(globalThis.FormData)</code> at module scope. In Node, <code>FormData</code>/<code>Request</code>/<code>Headers</code> are lazy getters, and the first touch loads undici and its dependencies (${f0(exp?.emptyProcessFormDataTouchMs ?? undiciMs)} ms even in an empty process). workerd has these natively.</li>
+<li><b>undici init (~${pct(loadAvg["Node: undici init"], S.med.moduleLoad)}, Node only).</b> Node creates its fetch-related globals lazily, and the first touch loads undici and its dependencies (crypto, zlib, web streams). workerd has these natively. See below for what triggers it.</li>
 <li><b>Effect's own module evaluation</b> (services, tags, schema singletons) is ~${f0(loadAvg["Effect module evaluation"])} ms.</li>
 </ul>
 <h3>Measured levers</h3>
-<div class="card"><h4>Module load under each lever</h4><p class="caption">median ms · each lever measured on its own · ${S.endpoints}-endpoint app, except the FormData A/B (${exp?.size ?? ""} app; module load barely depends on size)</p><div class="chart" data-chart="levers"></div>${details("Table view", tblLevers)}${details("All sizes", tblLeversAll)}</div>
+<div class="card"><h4>Module load under each lever (web-handler bundle)</h4><p class="caption">median ms · each lever measured on its own · ${S.endpoints}-endpoint app, except the FormData A/B (${exp?.size ?? ""} app; module load barely depends on size)</p><div class="chart" data-chart="levers"></div>${details("Table view", tblLevers)}${details("All sizes", tblLeversAll)}</div>
 <ul>
 <li><b>Minify:</b> −${f0(minSaving)} ms on average (${f0(S.bundleKB)} → ${f0(minRows[0].bundleKB)} KB). Works on any runtime.</li>
 <li><b>Node compile cache</b> (<code>NODE_COMPILE_CACHE</code>, V8 code cache on disk): −${f0(cacheSaving)} ms of module load. It leaves define/build unchanged, because the cache holds the code compiled at load time, while the functions that only run later during define and build are still compiled lazily on first call.</li>
-${exp ? `<li><b>Removing the module-scope <code>FormData</code> reference:</b> −${f0(undiciMs)} ms of module load. On Node with web handlers the cost reappears in the first <code>new Request()</code> (first request ${f1(exp.baseline.first)} → ${f1(exp.withoutFormData.first)} ms, total unchanged). For a <code>node:http</code> server that never uses undici, it is a net saving.</li>` : ""}
 </ul>
-${exp ? details("A/B detail: module-scope FormData reference", tblExperiment) : ""}
+${expU ? `<h3>Why every Node server pays for undici</h3>
+<p>Two independent things load undici during startup, each costing about 30 ms in isolation (Node ${esc(expU.node)}):</p>
+<ol>
+<li><b><code>Schema.ts</code> evaluates <code>instanceOf(globalThis.FormData)</code> at module scope.</b> Touching <code>FormData</code> in an empty process costs ${f1(expU.isolated.touchFormDataMs)} ms.</li>
+<li><b>An ESM <code>import … from "node:http"</code></b>, which <code>@effect/platform-node</code> does. Node 24's <code>http</code> module exposes lazy, undici-backed <code>WebSocket</code>, <code>CloseEvent</code> and <code>MessageEvent</code> getters, and an ESM import snapshots every export, which triggers them: <code>import("node:http")</code> costs ${f1(expU.isolated.esmImportNodeHttpMs)} ms, while <code>process.getBuiltinModule("node:http")</code> (or <code>require</code>) costs ${f1(expU.isolated.getBuiltinModuleNodeHttpMs)} ms.</li>
+</ol>
+<div class="card"><h4>Server cold start with the undici triggers removed</h4><p class="caption">${expU.size} API, median of ${expU.runs} runs · each variant patches the bundle</p><div class="chart" data-chart="undici"></div>${details("Table view", tblUndici)}</div>
+<p>Removing either trigger alone changes nothing, because the other one still loads undici. <b>Removing both cuts server cold start by ${f0(undiciSaving)} ms</b> (${f1(expU.server["As shipped"].coldStart)} → ${f1(expU.server["Both removed"].coldStart)} ms), and undici is never loaded. In <b>web-handler mode</b> the FormData reference is the only trigger: removing it drops module load from ${f0(exp.baseline.eval - B)} to ${f0(exp.withoutFormData.eval - B)} ms, but the cost reappears in the first <code>new Request()</code> (${f1(exp.baseline.first)} → ${f1(exp.withoutFormData.first)} ms), so on Node the total doesn't change; on workerd these globals are native and the cost doesn't exist.</p>
+${details("A/B detail: web-handler mode", tblExperiment)}` : ""}
 <div class="card"><h4>What is in the bundle</h4><p class="caption">KB of output per source category (unminified)</p><div class="chart" data-chart="bundle"></div>${details("Table view", tblBytes)}</div>
 
 <h2>5 · Where to cut cold start</h2>
@@ -497,13 +561,14 @@ ${exp ? details("A/B detail: module-scope FormData reference", tblExperiment) : 
 <li><b>Defer per-route setup to the first hit on that route.</b> Build is ${f0(sumPer("build"))} µs/endpoint and is paid upfront for every route. Compiling a route's codecs and handler pipeline (<code>handlerToRoute</code>, <code>SchemaAST.copy</code>/<code>make</code>) on first request would make cold start pay only for the routes a fresh instance actually serves.</li>
 <li><b>Execute less distinct code at startup.</b> ${pct(penalty(WS), WS.med.cold)} (small) to ${pct(penalty(WL), WL.med.cold)} (large) of post-load time is cold-code penalty. Fewer generic layers on the define/build path (<code>dual</code>/<code>pipe</code> wrappers, Effect-runtime-driven layer construction for what is synchronous setup) cut both the work and the code that has to be compiled.</li>
 <li><b>Cheaper route registration.</b> <code>FindMyWay._on</code> is the top self-time function in build. Its per-segment <code>split/join</code> and <code>toLowerCase</code> could be skipped for plain segments, or the tree could be built lazily on first lookup.</li>
-<li><b>Lazy <code>FormData</code>/<code>File</code> guards</b> in <code>Schema.ts</code>: reading the global inside the check instead of at module scope removes ~${f0(undiciMs)} ms from Node cold starts that don't otherwise need undici.</li>
+<li><b>Stop loading undici in Node servers (−${f0(undiciSaving)} ms per cold start, measured).</b> Two changes are needed together: make the <code>FormData</code>/<code>File</code> guards in <code>Schema.ts</code> read the global lazily inside the check, and have <code>@effect/platform-node</code> obtain <code>node:http</code> through <code>process.getBuiltinModule("node:http")</code> (Node ≥ 20.16 / 22.3) instead of a static ESM import.</li>
 <li><b>For users:</b> minify (−${f0(minSaving)} ms), enable the compile cache where the platform allows (−${f0(cacheSaving)} ms on Node), and reuse schema values across endpoints.</li>
 </ol>
 
 <h2>Methodology</h2>
 <ul>
-<li><b>Process model.</b> Harness + generated API bundled by rolldown into one ESM file (<code>platform: "neutral"</code>, JSDoc stripped, unminified unless stated). <code>effect</code> resolves from the published npm package exactly like an app. Each sample is a new <code>node</code> process: two discarded warmup processes per size (to warm the OS file cache only; every measured process is a cold V8 isolate), then ${env.runs} measured, run sequentially. Node's compile cache is off except in the lever experiment.</li>
+<li><b>Server mode (headline).</b> Harness + generated API + <code>@effect/platform-node</code> bundled by rolldown (<code>platform: "node"</code>). The runner, a long-lived Node process, records the time, spawns the server, waits for its "listening" line (port 0 on 127.0.0.1), sends <code>GET /r0/1</code> (<code>/r0</code> for 1-endpoint groups) with a fresh connection, and stops the clock when the response body has been read. The server reports its own phase times and its CPU when the response is sent.</li>
+<li><b>Web-handler mode.</b> Harness + generated API bundled by rolldown into one ESM file (<code>platform: "neutral"</code>, JSDoc stripped, unminified unless stated). <code>effect</code> resolves from the published npm package exactly like an app. Each sample is a new <code>node</code> process: two discarded warmup processes per size (to warm the OS file cache only; every measured process is a cold V8 isolate), then ${env.runs} measured, run sequentially. Node's compile cache is off except in the lever experiment.</li>
 <li><b>Cold start</b> = time from process start (<code>performance.timeOrigin</code>) until the first response body has been read. Node boot is the median time-to-first-line of an empty script (${f1(B)} ms). CPU is <code>process.cpuUsage()</code> at the first response (all threads).</li>
 <li><b>API shape.</b> <code>G</code> groups × <code>E</code> endpoints (${data.sizes.map((s) => `${s.groups}×${s.endpoints}`).join(", ")}). Each group is a REST resource with an entity struct (int, strings, literal union, optional, array, nested struct), create/update payloads, a <code>TaggedError</code> 404, a struct 409, and list/get/create/update/delete endpoints plus <code>actionN</code> endpoints with their own schemas. Handlers are trivial.</li>
 <li><b>Cold vs warm.</b> In-process rebuilds with <code>BENCH_WARM=5</code>, last iteration reported, ${rawWarm.runs} processes per size.</li>
@@ -514,7 +579,7 @@ ${exp ? details("A/B detail: module-scope FormData reference", tblExperiment) : 
 <h2>Appendix</h2>
 <p><b>Not part of cold start: OpenAPI generation.</b> <code>OpenApi.fromApi</code> costs ${f0(fits.openapi.slope * 1000)} µs/endpoint (${f0(L.med.openapi)} ms at ${L.endpoints} endpoints), but <code>HttpApiScalar</code>, <code>HttpApiSwagger</code> and <code>openapiPath</code> all build it lazily and memoize it, so only the first <code>/docs</code> request on an instance pays it.</p>
 ${details("Raw medians / p95 (ms) for every phase", tblRaw)}
-<p class="sub">Reproduce: <code>node scripts/collect.mjs &amp;&amp; node scripts/experiment-formdata.mjs &amp;&amp; node scripts/render-report.mjs</code> · source: <a href="https://github.com/mikearnaldi/benchmark-http-api-boot" style="color:inherit">github.com/mikearnaldi/benchmark-http-api-boot</a></p>
+<p class="sub">Reproduce: <code>node scripts/collect.mjs &amp;&amp; node scripts/experiment-undici.mjs &amp;&amp; node scripts/render-report.mjs</code> · source: <a href="https://github.com/mikearnaldi/benchmark-http-api-boot" style="color:inherit">github.com/mikearnaldi/benchmark-http-api-boot</a></p>
 </main>
 <div class="tip" id="tip"></div>
 <script>
@@ -553,7 +618,7 @@ const legend = (mount, series) => {
 function stack(mount, c) {
   const series = c.series.filter((s) => c.rows.some((r) => (r.values[s.key] ?? 0) > 0));
   if (series.length > 1) legend(mount, series);
-  const W = mount.clientWidth, labelW = Math.min(170, Math.max(...c.rows.map((r) => r.label.length)) * 7 + 14), right = 64;
+  const W = mount.clientWidth, labelW = Math.min(240, Math.max(...c.rows.map((r) => r.label.length)) * 7 + 14), right = 64;
   const barH = 22, gap = 16, top = 4, axisH = 22;
   const H = top + c.rows.length * (barH + gap) - gap + axisH + 6;
   const svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, height: H });

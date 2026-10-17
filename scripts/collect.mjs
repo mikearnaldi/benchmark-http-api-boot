@@ -44,6 +44,8 @@ const bench = (label, extra, runs = opts.runs) => {
   ], { stdio: ["ignore", "inherit", "inherit"] })
   return JSON.parse(readFileSync(out, "utf8"))
 }
+console.log("== server cold start (spawn node:http server, one HTTP request)")
+const timingsServer = bench("server", ["--server"])
 console.log("== timings (normal bundle)")
 const timings = bench("normal", [])
 console.log("== timings (minified bundle)")
@@ -239,6 +241,7 @@ const data = {
   sizes: sizes.map((s) => ({ size: s, ...parseSize(s), total: parseSize(s).groups * parseSize(s).endpoints })),
   timings: { ...timings, results: timings.results.map(({ samples, ...r }) => r) },
   timingsMin: { ...timingsMin, results: timingsMin.results.map(({ samples, ...r }) => r) },
+  timingsServer: { ...timingsServer, results: timingsServer.results.map(({ samples, ...r }) => r) },
   timingsWarm: { ...timingsWarm, results: timingsWarm.results.map(({ samples, ...r }) => r) },
   timingsCache: { ...timingsCache, results: timingsCache.results.map(({ samples, ...r }) => r) },
   profiles: profiles.map(({ bundleMeta, ...p }) => ({ ...p, bundleBytesByCategory: composition(bundleMeta) }))

@@ -3,10 +3,17 @@
 **📊 Latest report: https://mikearnaldi.github.io/benchmark-http-api-boot/**
 (published from `reports/` by `.github/workflows/pages.yml` on every push to `main`)
 
-Measures how long it takes an `effect/http-api` app (Effect v4) to go from a
-fresh process to its first response, as a function of API size. Models a
-Cloudflare Worker: the app is bundled into one ESM file and every sample is a
-brand new `node` process.
+Measures the cold start of an `effect/http-api` app (Effect v4), i.e. **start the
+server and answer one request**, as a function of API size. Every sample is a
+brand new `node` process running a single rolldown bundle. Two modes:
+
+- **Server** (`bench.mjs --server`, headline): `scripts/harness-server.mjs` runs
+  `HttpRouter.serve` on `@effect/platform-node`'s `NodeHttpServer`. The runner
+  spawns it, waits for its "listening" line, sends one HTTP `GET` over loopback and
+  measures spawn → response received (plus the server's own phase times).
+- **Web handler** (default): `scripts/harness.mjs` builds
+  `HttpRouter.toWebHandler` (Worker-style, platform-neutral bundle) and passes one
+  `Request` in-process. Used for phase-level CPU profiles and the cold/warm split.
 
 ## What gets measured
 
@@ -16,7 +23,7 @@ optionals, arrays, a nested struct), create/update payloads, a `TaggedError`
 404, a 409 struct error, and endpoints `list` / `get` / `create` / `update` /
 `remove` + `actionN` endpoints with their own schemas beyond the first 5.
 
-`scripts/harness.mjs` is bundled with it and reports per phase (ms):
+Web-handler mode reports per phase (ms):
 
 | phase     | what                                                                 |
 |-----------|----------------------------------------------------------------------|
@@ -37,7 +44,8 @@ sits on top of module eval for a Worker's first request.
 
 ```sh
 pnpm install
-node scripts/bench.mjs                                   # default sizes, 30 runs each
+node scripts/bench.mjs --server                          # real cold start: spawn node:http server + 1 HTTP request
+node scripts/bench.mjs                                   # web-handler mode (in-process request), 30 runs each
 node scripts/bench.mjs --sizes 10x10,100x10 --runs 50 --openapi --minify
 node scripts/bench.mjs --sizes 10x10 --warm 5               # + in-process warm rebuilds: cold-code penalty
 node scripts/bench.mjs --sizes 10x10 --compile-cache         # with Node's on-disk V8 code cache
@@ -57,8 +65,8 @@ node scripts/compare.mjs results/before-*.json results/after-*.json
 ### HTML report
 
 ```sh
-node scripts/collect.mjs                 # timings (normal + minified) + phase-split CPU profiles → reports/data.json
-node scripts/experiment-formdata.mjs     # A/B of the module-scope globalThis.FormData reference
+node scripts/collect.mjs                 # server cold start, web-handler timings (normal/minified/warm/compile-cache) + CPU profiles → reports/data.json
+node scripts/experiment-undici.mjs       # A/B of the undici triggers (FormData ref, ESM import of node:http)
 node scripts/render-report.mjs           # → reports/report.html (self-contained, light/dark)
 ```
 
