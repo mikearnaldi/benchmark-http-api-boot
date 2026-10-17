@@ -3,12 +3,19 @@
 //   node scripts/bench.mjs [--sizes 1x5,10x10,50x10,100x10] [--runs 30]
 //                          [--effect-pkg ../effect/packages/effect]  (built: has dist/)
 //                          [--label name] [--minify] [--openapi]
+//                          [--warm N] [--compile-cache]
+//
+// --warm N         also rebuild define/build/request N times in-process after
+//                  the cold pass and report the last (warm) iteration
+// --compile-cache  enable Node's on-disk V8 code cache (NODE_COMPILE_CACHE);
+//                  the warmup runs populate it, measured runs read it
 //
 // For every size: generate the API, bundle it, then spawn `--runs` fresh node
 // processes (sequentially, after 2 discarded warmup runs for the OS file cache)
 // and report median / p95 of every phase. Results are written to results/.
 import { execFileSync } from "node:child_process"
-import { mkdirSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
@@ -25,15 +32,18 @@ const { values: opts } = parseArgs({
     label: { type: "string" },
     minify: { type: "boolean", default: false },
     openapi: { type: "boolean", default: false },
-    out: { type: "string" }
+    out: { type: "string" },
+    warm: { type: "string", default: "0" },
+    "compile-cache": { type: "boolean", default: false }
   }
 })
 
 const runs = Number(opts.runs)
 const label = opts.label ?? (opts["effect-pkg"] ? "local" : "npm")
-const env = { ...process.env, BENCH_OPENAPI: opts.openapi ? "1" : "0" }
+const env = { ...process.env, BENCH_OPENAPI: opts.openapi ? "1" : "0", BENCH_WARM: opts.warm }
 delete env.NODE_COMPILE_CACHE
 delete env.NODE_OPTIONS
+const compileCacheRoot = opts["compile-cache"] ? mkdtempSync(join(tmpdir(), "bench-compile-cache-")) : undefined
 
 const quantile = (xs, q) => {
   const s = [...xs].sort((a, b) => a - b)
@@ -42,7 +52,11 @@ const quantile = (xs, q) => {
   return s[lo] + (s[Math.ceil(i)] - s[lo]) * (i - lo)
 }
 
-const runProcess = (file) => JSON.parse(execFileSync(process.execPath, [file], { env, encoding: "utf8" }))
+// One cache dir per bundle so sizes never share entries.
+const runProcess = (file) => JSON.parse(execFileSync(process.execPath, [file], {
+  env: compileCacheRoot ? { ...env, NODE_COMPILE_CACHE: join(compileCacheRoot, file.replace(/[^a-z0-9]/gi, "_")) } : env,
+  encoding: "utf8"
+}))
 
 const sample = (file) => {
   runProcess(file)

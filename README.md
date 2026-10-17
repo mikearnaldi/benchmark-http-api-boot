@@ -39,6 +39,8 @@ sits on top of module eval for a Worker's first request.
 pnpm install
 node scripts/bench.mjs                                   # default sizes, 30 runs each
 node scripts/bench.mjs --sizes 10x10,100x10 --runs 50 --openapi --minify
+node scripts/bench.mjs --sizes 10x10 --warm 5               # + in-process warm rebuilds: cold-code penalty
+node scripts/bench.mjs --sizes 10x10 --compile-cache         # with Node's on-disk V8 code cache
 node scripts/profile.mjs --size 100x10                   # CPU profile, self time by file/function
 node scripts/profile.mjs --size 100x10 --include-eval    # include module evaluation
 

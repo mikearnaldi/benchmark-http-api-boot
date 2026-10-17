@@ -2,18 +2,18 @@
   "size": "10x10",
   "runs": 25,
   "baseline": {
-    "eval": 86.510566,
-    "define": 13.035629,
-    "handler": 13.365724999999998,
-    "first": 7.519502000000003,
-    "total": 121.733004
+    "eval": 86.057569,
+    "define": 14.441910000000007,
+    "handler": 13.398023999999992,
+    "first": 7.578900000000004,
+    "total": 121.706
   },
   "withoutFormData": {
-    "eval": 55.997966,
-    "define": 15.875692,
-    "handler": 14.394411000000005,
-    "first": 34.614746999999994,
-    "total": 122.173998
+    "eval": 56.31956,
+    "define": 15.823591999999998,
+    "handler": 14.454409999999996,
+    "first": 34.57504499999999,
+    "total": 122.749986
   },
-  "emptyProcessFormDataTouchMs": 32.145779000000005
+  "emptyProcessFormDataTouchMs": 29.65771
 }

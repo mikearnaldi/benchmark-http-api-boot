@@ -34,11 +34,11 @@ const outDir = join(root, "reports")
 mkdirSync(outDir, { recursive: true })
 
 // ---------------------------------------------------------------- timings
-const bench = (label, extra) => {
+const bench = (label, extra, runs = opts.runs) => {
   const out = join(outDir, `bench-${label}.json`)
   execFileSync(process.execPath, [
     join(root, "scripts", "bench.mjs"),
-    "--sizes", opts.sizes, "--runs", opts.runs, "--openapi", "--label", `report-${label}`, "--out", out,
+    "--sizes", opts.sizes, "--runs", String(runs), "--openapi", "--label", `report-${label}`, "--out", out,
     ...(opts["effect-pkg"] ? ["--effect-pkg", opts["effect-pkg"]] : []),
     ...extra
   ], { stdio: ["ignore", "inherit", "inherit"] })
@@ -48,6 +48,12 @@ console.log("== timings (normal bundle)")
 const timings = bench("normal", [])
 console.log("== timings (minified bundle)")
 const timingsMin = bench("minified", ["--minify"])
+// Cold-start experiments (fewer runs; differences are large).
+const expRuns = Math.max(10, Math.round(Number(opts.runs) / 2))
+console.log("== cold vs warm (same process, 5 in-process rebuilds)")
+const timingsWarm = bench("warm", ["--warm", "5"], expRuns)
+console.log("== Node compile cache (V8 code cache)")
+const timingsCache = bench("compile-cache", ["--compile-cache"], expRuns)
 
 // ---------------------------------------------------------------- categories
 // Ordered: first match wins.
@@ -233,6 +239,8 @@ const data = {
   sizes: sizes.map((s) => ({ size: s, ...parseSize(s), total: parseSize(s).groups * parseSize(s).endpoints })),
   timings: { ...timings, results: timings.results.map(({ samples, ...r }) => r) },
   timingsMin: { ...timingsMin, results: timingsMin.results.map(({ samples, ...r }) => r) },
+  timingsWarm: { ...timingsWarm, results: timingsWarm.results.map(({ samples, ...r }) => r) },
+  timingsCache: { ...timingsCache, results: timingsCache.results.map(({ samples, ...r }) => r) },
   profiles: profiles.map(({ bundleMeta, ...p }) => ({ ...p, bundleBytesByCategory: composition(bundleMeta) }))
 }
 writeFileSync(join(outDir, "data.json"), JSON.stringify(data, null, 2))

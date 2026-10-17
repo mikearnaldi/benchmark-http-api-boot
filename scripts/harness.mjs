@@ -39,6 +39,8 @@ const url = Api.meta.endpoints >= 2 ? "http://localhost/r0/1" : "http://localhos
 const res1 = await handler(new Request(url))
 await res1.text()
 mark("first")
+// Whole-process CPU (all threads) up to the first response: the cold-start CPU bill.
+const cpuCold = process.cpuUsage()
 const res2 = await handler(new Request(url))
 await res2.text()
 mark("second")
@@ -53,10 +55,38 @@ const cpu = process.cpuUsage()
 const total = performance.now()
 await dispose()
 
+// BENCH_WARM=N: after the cold pass, rebuild everything N more times in the
+// same process (fresh API, layer, handler, request each time) and report the
+// last iteration. Same work, but V8 has already compiled and optimized the
+// code paths, so cold - warm = the cold-code penalty.
+const warm = {}
+const warmRuns = Number(process.env.BENCH_WARM ?? 0)
+for (let i = 0; i < warmRuns; i++) {
+  let w = performance.now()
+  const lap = (name) => {
+    const now = performance.now()
+    warm[name] = now - w
+    w = now
+  }
+  const api2 = Api.defineApi()
+  lap("warmDefine")
+  const layer2 = Api.defineLayer(api2)
+  lap("warmLayer")
+  const web2 = Api.toWebHandler(layer2)
+  lap("warmHandler")
+  const res = await web2.handler(new Request(url))
+  await res.text()
+  lap("warmFirst")
+  if (res.status !== 200) throw new Error(`unexpected warm status ${res.status}`)
+  await web2.dispose()
+}
+
 process.stdout.write(JSON.stringify({
   eval: tEval,
   ...t,
   total,
+  cpuColdStart: (cpuCold.user + cpuCold.system) / 1000,
+  ...warm,
   // CPU time spent from first harness line to the end of the last phase.
   cpuAfterEval: (cpu.user - cpu0.user + cpu.system - cpu0.system) / 1000,
   // CPU time for the whole process, including bootstrap + eval.
