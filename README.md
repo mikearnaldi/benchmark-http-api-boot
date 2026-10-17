@@ -1,5 +1,8 @@
 # HttpApi cold-start benchmark
 
+**📊 Latest report: https://mikearnaldi.github.io/benchmark-http-api-boot/**
+(published from `reports/` by `.github/workflows/pages.yml` on every push to `main`)
+
 Measures how long it takes an `effect/http-api` app (Effect v4) to go from a
 fresh process to its first response, as a function of API size. Models a
 Cloudflare Worker: the app is bundled into one ESM file and every sample is a
